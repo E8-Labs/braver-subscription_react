@@ -56,7 +56,7 @@ function AddCard(props){
             if(tok){
                 if(tok.id){
                     console.log("Token obtained " + tok.id)
-                    const data = await axios.post("http://braverhospitalityapp.com/braver/api/addcard", {
+                    const data = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
                         cardnumber: cardnumber,
                         cardholdername: cardholdername,
                         cvc: cvv,

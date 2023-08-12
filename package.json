@@ -1,6 +1,6 @@
 {
   "name": "braver-subscriptions",
-  "proxy": "http://braverhospitalityapp.com",
+  "proxy": "https://braverhospitalityapp.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -35,7 +35,7 @@ const Prices = () => {
         const user = JSON.parse(d)
         console.log("User is " + user.userid)
         setUser(user)
-    const url = `http://braverhospitalityapp.com/braver/api/cardlist`
+    const url = `https://braverhospitalityapp.com/braver/api/cardlist`
     const data = await axios.post(url, {
       userid: user.userid,
       apikey: "kinsal0349"
@@ -75,7 +75,7 @@ const closePopup= ()=>{
     else{
       // process the payment using one of the cards or let user select the card
       console.log("Payment method added, now process the payment")
-      const data = await axios.post("http://braverhospitalityapp.com/braver/api/create_subscription", {
+      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", {
           userid: user.userid,
           plan: plan,
           apikey: "kinsal0349"

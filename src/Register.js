@@ -26,7 +26,7 @@ function Register(){
       }
       else{
         const {email, password} = values;
-        const data = await axios.post("http://braverhospitalityapp.com/braver/api/login", {
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/login", {
           email: email,
           password: password,
           apikey: "kinsal0349"
