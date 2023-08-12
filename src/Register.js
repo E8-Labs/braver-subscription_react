@@ -35,7 +35,14 @@ function Register(){
             console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             localStorage.setItem(process.env.REACT_APP_LocalSavedUser, JSON.stringify(data.data.data));
-            navigate("/prices")
+            if(data.data.data.plan.status === "active" || data.data.data.plan.status === "trialing"){
+              navigate("/account", {
+                user: data.data.data
+              })
+            }
+            else{
+              navigate("/prices")
+            }
         }
         else{
             // toast.error("Error : " + data.data.message)

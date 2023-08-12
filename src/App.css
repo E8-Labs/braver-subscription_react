@@ -100,7 +100,7 @@ fieldset, input, select {
 }
 
 .bg-red{
-  background-color: #635BFF;
+  background-color: red;
 }
 
 #messages {
