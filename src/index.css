@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.text-white{
+  color: white;
+}
+.bg-image{  background: url('../public/yacht.png'); background-color: #050A08;   
+  height: 100vh;  width: 100vw;  background-size: 100% 100%;  
+  background-position: center;  background-repeat: no-repeat;}
+
+/* .bg-red{
+  background-color: 'red';
+} */
+
+/* .bg-primary{
+  background-color: ;
+} */
