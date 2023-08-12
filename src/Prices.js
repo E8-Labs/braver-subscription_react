@@ -103,14 +103,14 @@ const closePopup= ()=>{
     return <Subscribe state={subscriptionData} />
   }
 
-  if(user !== null && user.is_premium === true){
-    return (
-      <FormContainer className='bg-image '>
+  // if(user !== null && user.is_premium === true){
+  //   return (
+  //     <FormContainer className='bg-image '>
         
-        <h1 >Already subscribed</h1>
-       </FormContainer>
-    )
-  }
+  //       <h1 >Already subscribed</h1>
+  //      </FormContainer>
+  //   )
+  // }
 
   return (
     <FormContainer className='bg-red bg-image'>
