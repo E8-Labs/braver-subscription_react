@@ -1,22 +1,51 @@
 import react, {useState, useEffect} from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import {ElementsConsumer, PaymentElement} from '@stripe/react-stripe-js';
+import {ElementsConsumer, PaymentElement, 
+  CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
 import Stripe from 'stripe'
 // import {Stripe} from '@stripe/react-stripe-js';
 // import Logo from '../assets/logo.png'
 // import AppIcon from '../assets/appicon.svg'
 import axios from 'axios';
+import {Elements} from '@stripe/react-stripe-js';
+
+// import CheckoutForm from './CheckoutForm';
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+
+
 
 // import { ToastContainer, toast } from 'react-toastify';
   // import 'react-toastify/dist/ReactToastify.css';
 // import { loginRoute } from '../utils/APIRoutes';
-
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      color: "#32325d",
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: "antialiased",
+      fontSize: "16px",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+    },
+    invalid: {
+      color: "#fa755a",
+      iconColor: "#fa755a",
+    },
+  },
+};
 
 function AddCard(props){
     const navigate = useNavigate();
     const location = useLocation()
-    const stripe = Stripe('sk_test_51JfmvpC2y2Wr4Becgv8amGZMeUsm1Y9CgJTeJVcX7fCxWdeIHXh0tLmxewFN1d71uSZKxCpQIwkdmS0QG2c8Vdw600KxxN1UwK');
+    const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
+
+    const stripeReact = useStripe();
+  const elements = useElements();
+    
   const [values, setValues] = useState({
     cardnumber: "",
     cardholdername: "",
@@ -24,9 +53,24 @@ function AddCard(props){
     expirydate: ""
   })
 
-  
+  const handleSubmitStripeCardElement = (event) => {
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
+      console.log("Stripe not initialized")
+      return;
+    }
+    const card = elements.getElement(CardElement);
+    // console.log(card)
+    stripeReact.createToken(card).then(function(result) {
+      // Handle result.error or result.token
+      console.log("result creating token")
+      console.log(result) //contains a card object as well
+      
+    });
+  }
     const handleSubmit = async (event)=>{
       console.log("Callin api");
+      console.log("Stripe Secret Key " + process.env.REACT_APP_STRIPE_SECRET_KEY);
     //   this.props.closePopup()
         event.preventDefault();
         const validation = handleValidation()
@@ -41,16 +85,21 @@ function AddCard(props){
         const user = JSON.parse(d)
         console.log("User is " + user.userid)
 
+//uncomment below code to generate tokens when in live mode
+        // const tok = await stripe.tokens.create({
+        //     card: {
+        //       number: cardnumber,
+        //       exp_month: 8,
+        //       exp_year: 2024,
+        //       cvc: cvv,
+        //     },
+        //   }, function(err, token) {
+        //     // asynchronously called
+        //     console.log("Error creating token")
+        //     console.log(err)
+        //   });
 
-        const tok = await stripe.tokens.create({
-            card: {
-              number: cardnumber,
-              exp_month: 8,
-              exp_year: 2024,
-              cvc: cvv,
-            },
-          });
-
+        const tok = {id: "tok_visa"};
             console.log("Creating token")
              console.log(tok)
             if(tok){
@@ -68,6 +117,7 @@ function AddCard(props){
                     if(data.data.status === "1"){
                         console.log(data.data); // this will have the whole response from the api with status, message and data
                         // navigate("/prices")
+                        props.oncardAdded()
                         props.closePopup()
                         // navigate("/")
                     }
@@ -104,24 +154,31 @@ function AddCard(props){
 
 
     return(
-    <>
-    //onClick={()=>props.closePopup()}
-    <FormContainer >
-        <form >
-            <div className='brand'>
-                {/* <img src={AppIcon} alt="Logo"/> */}
-                <h1 className='fs-6'>Add Card</h1>
-            </div>
+      // <Elements stripe={stripePromise}>
+        <FormContainer className='row'>
+        <label className='col-md-4 m-auto innerLabel justify-content-center align-items-center'>
+          Card details
+          <CardElement options={CARD_ELEMENT_OPTIONS} />
+        </label>
+        <button className="col-md-4" type='submit' onClick={handleSubmitStripeCardElement}>Add Card</button>
+        </FormContainer>
+      // </Elements>
+    // <>
+    // <FormContainer >
+    //     <form >
+    //         <div className='brand'>
+    //             {/* <img src={AppIcon} alt="Logo"/> */}
+    //             <h1 className='fs-6'>Add Card</h1>
+    //         </div>
             
-            <input type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
-            <button type='submit' onClick={handleSubmit}>Add Card</button>
-        </form>
-    </FormContainer>
-    {/* <ToastContainer /> */}
-    </>
+    //         <input type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
+    //         <input type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
+    //         <input type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
+    //         <input type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
+    //         <button type='submit' onClick={handleSubmit}>Add Card</button>
+    //     </form>
+    // </FormContainer>
+    // </>
     );
 }
 
@@ -134,6 +191,11 @@ const FormContainer = styled.div`
   gap: 1rem;
   align-items: center; //horizontal center
   background-color: transparent;
+  .innerLabel{
+    background-color: white;
+    height: 40vh;
+
+  }
   .brand {
     display: flex;
     align-items: center;

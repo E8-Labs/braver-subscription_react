@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
+
 import { useNavigate, withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components'
@@ -10,8 +14,10 @@ import AddCard from './AddCard';
 import axios from 'axios';
 import Stripe from 'stripe'
 
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+
 const Prices = () => {
-  const stripe = Stripe('sk_test_51JfmvpC2y2Wr4Becgv8amGZMeUsm1Y9CgJTeJVcX7fCxWdeIHXh0tLmxewFN1d71uSZKxCpQIwkdmS0QG2c8Vdw600KxxN1UwK');
+  const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
@@ -63,6 +69,9 @@ const closePopup= ()=>{
   }
 
   const createSubscription = async (priceId) => {
+    setIsPopupOpen(true)
+  }
+  const createSubscription2 = async (priceId) => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
@@ -114,15 +123,18 @@ const closePopup= ()=>{
 
   return (
     <FormContainer className='bg-red bg-image'>
-      <ReactModal
-            isOpen={isAddCardPopupOpen}
-            contentLabel="Add card"
-            onRequestClose={()=>{setIsPopupOpen(false)}}
-            style={customStyles}
-            ariaHideApp={false}
-            >
-            <AddCard closePopup={closePopup} oncardAdded={loadCards} />
-      </ReactModal>
+      <Elements  stripe={stripePromise}>
+          <ReactModal
+                isOpen={isAddCardPopupOpen}
+                contentLabel="Add card"
+                onRequestClose={()=>{setIsPopupOpen(false)}}
+                style={customStyles}
+                ariaHideApp={false}
+                className='row bg-red align-items-center justify-content-center'
+                >
+                <AddCard className='col-md-8' closePopup={closePopup} oncardAdded={loadCards} />
+          </ReactModal>
+      </Elements>
       <div className='transparent-bg'>
       </div>
           <p className='text-white heading' >Select a subscription plan</p>
@@ -177,9 +189,9 @@ height: 100vh;
     font-weight: bold;
   }
 
-  h1, button{
-    z-index: 2;
-  }
+  // h1, button{
+  //   z-index: 2;
+  // }
   button{
     border-radius: 0.3rem;
     font-size: 2.2vw;
