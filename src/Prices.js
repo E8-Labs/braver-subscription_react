@@ -37,6 +37,7 @@ const Prices = () => {
 
 
   const loadCards = async ()=>{
+    console.log("User key " + process.env.REACT_APP_LocalSavedUser)
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
         console.log("User is " + user.userid)
