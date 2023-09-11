@@ -21,8 +21,8 @@ const Prices = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
-  const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "USD 99.99 / mo", trial: "90 day free trial"},
-  {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "USD 999.99 / half year", trial: "90 day free trial"}]);
+  const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
+  {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);
   const [plan, setPlan] = useState("121h1283hser")
   const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
@@ -123,8 +123,8 @@ const closePopup= ()=>{
   // }
 
   return (
-    <FormContainer className='bg-red bg-image'>
-      <Elements  stripe={stripePromise}>
+    <FormContainer className='bg-image'>
+      {/* <Elements  stripe={stripePromise}>
           <ReactModal
                 isOpen={isAddCardPopupOpen}
                 contentLabel="Add card"
@@ -135,20 +135,25 @@ const closePopup= ()=>{
                 >
                 <AddCard className='col-md-8' closePopup={closePopup} oncardAdded={loadCards} />
           </ReactModal>
-      </Elements>
+      </Elements> */}
       <div className='transparent-bg'>
       </div>
-          <p className='text-white heading' >Select a subscription plan</p>
+          <div className='title'>
+          <p className='text-white fs-2' >Select a subscription plan</p>
+          </div>
 
           <div className="price-list row">
             {prices.map((price) => {
               return (
-                <div className={price.id == plan ? "price-containerselected col-2" : "price-container col-2"} key={price.id} id={price.id} onClick={handlePlanChange}>
-                  <h3  className='text-white'>{price.name}</h3>
-                  <p className='text-white fs-6' >{price.trial}</p>
-                  <p className='text-white fs-5'>
-                    {price.unit_amount}
-                  </p>
+                <div className={price.id == plan ? "price-containerselected " : "price-container "} key={price.id} id={price.id} onClick={handlePlanChange}>
+                  <div className='row'>
+                    <h3  className='text-white col-8'>{price.name}</h3>
+                    
+                    <p className='text-white fs-5 col-4'>
+                      {price.unit_amount}
+                    </p>
+                  </div>
+                  <p className='text-white fs-6 col-6' >{price.trial}</p>
               
 
                 </div>
@@ -173,7 +178,7 @@ height: 100vh;
   justify-content: center; // vertical center if column and horizontal if row
   gap: 1rem;
   align-items: center; //horizontal center
-  background-color: #131324;
+  background-color: transparent;
 
   .transparent-bg{
     width: 100vw;
@@ -183,8 +188,18 @@ height: 100vh;
     top: 0;
     left: 0;
     z-index: -1;
+    
   }
-
+  .title{
+    padding-left: 2rem;
+    display: flex;
+    // flex-grow: 1;
+    height: 1rem;
+    width: 100vw;
+    align-items: left;
+    background-color: transparent;
+    justify-content: left;
+  }
   .heading{
     font-size: 3.0vw;
     font-weight: bold;
@@ -217,24 +232,28 @@ height: 100vh;
     justify-content: center;
     gap: 2rem;
     padding: 1rem;
-    background-color: #00000070;
+    background-color: transparent;
     border-radius: 1rem;
 
     margin: 1rem;
     .price-container{
+      // box-sizing: border-box;
       // z-index: 1;
+      flex-grow: 1;
       width: 15rem;
+      // margin: 0px,
       border: gray solid 0.1rem;
       // border-width: 1rem;
-      padding: 1rem;
+      padding: 0.5rem;
       border-radius: 0.3rem;
     }
     .price-containerselected{
       // z-index: 1;
+      flex-grow: 1;
       width: 15rem;
       border: white solid 0.1rem;
       // border-width: 1rem;
-      padding: 1rem;
+      padding: 0.5rem;
       border-radius: 0.3rem;
     }
   }

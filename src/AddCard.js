@@ -155,29 +155,29 @@ function AddCard(props){
 
     return(
       // <Elements stripe={stripePromise}>
-        <FormContainer className='row'>
-        <label className='col-md-4 m-auto innerLabel justify-content-center align-items-center'>
-          Card details
-          <CardElement options={CARD_ELEMENT_OPTIONS} />
-        </label>
-        <button className="col-md-4" type='submit' onClick={handleSubmitStripeCardElement}>Add Card</button>
-        </FormContainer>
+        // <FormContainer className='row'>
+        // <label className='col-md-4 m-auto innerLabel justify-content-center align-items-center'>
+        //   Card details
+        //   <CardElement options={CARD_ELEMENT_OPTIONS} />
+        // </label>
+        // <button className="col-md-4" type='submit' onClick={handleSubmitStripeCardElement}>Add Card</button>
+        // </FormContainer>
       // </Elements>
     // <>
-    // <FormContainer >
-    //     <form >
-    //         <div className='brand'>
-    //             {/* <img src={AppIcon} alt="Logo"/> */}
-    //             <h1 className='fs-6'>Add Card</h1>
-    //         </div>
+    <FormContainer >
+        <form >
+            <div className='brand'>
+                {/* <img src={AppIcon} alt="Logo"/> */}
+                <h1 className='fs-6'>Add Card</h1>
+            </div>
             
-    //         <input type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
-    //         <input type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
-    //         <input type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
-    //         <input type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
-    //         <button type='submit' onClick={handleSubmit}>Add Card</button>
-    //     </form>
-    // </FormContainer>
+            <input type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
+            <input type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
+            <input type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
+            <input type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
+            <button type='submit' onClick={handleSubmit}>Add Card</button>
+        </form>
+    </FormContainer>
     // </>
     );
 }

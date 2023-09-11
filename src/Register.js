@@ -78,13 +78,15 @@ function Register(){
         <form onSubmit={(event)=>handleSubmit(event)}>
             <div className='brand'>
                 {/* <img src={AppIcon} alt="Logo"/> */}
-                <h1 className='fs-6'>Braver Hospitality</h1>
+                <span className='label'>Enter your email and <br></br>password</span>
             </div>
             
-            <input type='email' placeholder='Email' name='email' onChange={e => handleChange(e)}></input>
-            <input type='password' placeholder='Password' name='password' onChange={e => handleChange(e)}></input>
+            <input className='inputuser' type='email' placeholder='Email' name='email' onChange={e => handleChange(e)}></input>
+            <input className='inputuser' type='password' placeholder='Password' name='password' onChange={e => handleChange(e)}></input>
 
-            <button type='submit'>Login User</button>
+            <div className='btndiv'>
+              <button type='submit'>Sign In</button>
+            </div>
             {/* <span>Create an account <Link to="/register">Register</Link></span> */}
         </form>
     </FormContainer>
@@ -101,67 +103,75 @@ const FormContainer = styled.div`
   justify-content: center; // vertical center
   gap: 1rem;
   align-items: center; //horizontal center
-  background-color: #131324;
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    img {
-      height: 5rem;
-    }
-    h1 {
-      color: white;
-      text-transform: uppercase;
-    }
-  }
+  background-color: #0C1339;
+  
 
   form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    // align-items: center;
+    justify-content: left;
+    align-items: left;
     gap: 2rem;
-    background-color: #00000076;
-    border-radius: 2rem;
-    padding: 3rem 5rem;
-  }
-  input {
-    background-color: transparent;
-    padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
-    width: 100%;
-    font-size: 1rem;
-    &:focus {
-      border: 0.1rem solid #997af0;
-      outline: none;
+    width: 85vw;
+    background-color: #0C1339;
+    border-radius: 0rem;
+    padding: 0rem 0rem;
+    .brand {
+      display: flex;
+      align-items: left;
+      gap: 1rem;
+      justify-content: left;
+      .label {
+        font-size: 25px;
+        color: white;
+        
+      }
+    }
+    .inputuser {
+      background-color: #0C1339;
+      padding: 0.6rem;
+      border: none;
+      border-bottom: 0.1rem solid white;
+     
+      color: white;
+      width: 100%;
+      font-size: 1rem;
+      &:focus {
+        border-bottom: 0.1rem solid white;
+        outline: none;
+      }
+    }
+    .btndiv{
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
+      align-items: end;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+      -webkit-box-shadow: 0 0 0 30px #0C1339 inset !important;
+      -webkit-text-fill-color: white !important;
     }
   }
+  
   button {
-    background-color: #4e0eff;
+    background-color: #FFFFFF15;
     color: white;
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 0.4rem;
+    border-radius: 18px;
     font-size: 1rem;
     text-transform: uppercase;
     &:hover {
       background-color: #4e0eff;
     }
   }
-  span {
-    color: white;
-    text-transform: uppercase;
-    a {
-      color: #4e0eff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  }
+  
 `;
 
 

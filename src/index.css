@@ -15,7 +15,7 @@ code {
 .text-white{
   color: white;
 }
-.bg-image{  background: url('../public/yacht.png'); background-color: #050A08;   
+.bg-image{  background: url('../public/pricesbg.png'); background-color: #050A08;   
   height: 100vh;  width: 100vw;  background-size: 100% 100%;  position: absolute;
   left: 0; top: 0;  background-repeat: no-repeat;}
 
