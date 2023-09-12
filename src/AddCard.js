@@ -4,11 +4,9 @@ import styled from 'styled-components'
 import {ElementsConsumer, PaymentElement, 
   CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
 import Stripe from 'stripe'
-// import {Stripe} from '@stripe/react-stripe-js';
-// import Logo from '../assets/logo.png'
-// import AppIcon from '../assets/appicon.svg'
 import axios from 'axios';
-import {Elements} from '@stripe/react-stripe-js';
+// import {Elements} from '@stripe/react-stripe-js';
+// import {loadStripe} from '@stripe/stripe-js';
 
 // import CheckoutForm from './CheckoutForm';
 
@@ -16,10 +14,8 @@ import {Elements} from '@stripe/react-stripe-js';
 // recreating the `Stripe` object on every render.
 
 
+// const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-// import { ToastContainer, toast } from 'react-toastify';
-  // import 'react-toastify/dist/ReactToastify.css';
-// import { loginRoute } from '../utils/APIRoutes';
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
@@ -117,9 +113,10 @@ function AddCard(props){
                     if(data.data.status === "1"){
                         console.log(data.data); // this will have the whole response from the api with status, message and data
                         // navigate("/prices")
-                        props.oncardAdded()
-                        props.closePopup()
-                        // navigate("/")
+                        // props.oncardAdded()
+                        // props.closePopup()
+                        
+                        navigate(-1)
                     }
                     else{
                         console.log( data.data)
@@ -154,31 +151,41 @@ function AddCard(props){
 
 
     return(
-      // <Elements stripe={stripePromise}>
-        // <FormContainer className='row'>
-        // <label className='col-md-4 m-auto innerLabel justify-content-center align-items-center'>
-        //   Card details
-        //   <CardElement options={CARD_ELEMENT_OPTIONS} />
-        // </label>
-        // <button className="col-md-4" type='submit' onClick={handleSubmitStripeCardElement}>Add Card</button>
-        // </FormContainer>
-      // </Elements>
-    // <>
     <FormContainer >
+      <div className='row headingrow  p-2'>
+        <div className='col-2 btn' onClick={() => {
+              console.log("Back button clicked")
+              navigate(-1)
+            }}>
+              <img className='backbtn' src="/backarrow.png"></img>
+        </div>
+        <div className='col centertitlediv'>
+            <p className='text-white text-center fs-6'> Add New Card</p>
+        </div>
+        <div className='col-2 btn' onClick={() => {
+              // console.log("Add Card Button clicked")
+              // addNewCard()
+            }}>
+              <img className='backbtn' src=""></img>
+        </div>
+        
+      </div>
         <form >
-            <div className='brand'>
-                {/* <img src={AppIcon} alt="Logo"/> */}
-                <h1 className='fs-6'>Add Card</h1>
+            
+            
+            
+            <input className='inputuser' type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
+            <input className='inputuser' type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
+            <div className='row justify-content-around'>
+              <input className='inputuser col-5' type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
+              <input className='inputuser col-5' type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
             </div>
             
-            <input type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
-            <input type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
+            
             <button type='submit' onClick={handleSubmit}>Add Card</button>
         </form>
     </FormContainer>
-    // </>
+    //  </Elements>
     );
 }
 
@@ -187,10 +194,36 @@ const FormContainer = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center; // vertical center
-  gap: 1rem;
+  justify-content: top; // vertical center
+  gap: 0rem;
   align-items: center; //horizontal center
-  background-color: transparent;
+  background-color: #0C1339;
+
+  .headingrow{
+    padding-top: 1rem;
+    
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    width: 100vw;
+    .btn{
+      display: flex;
+      flex-direction: row;
+      // background-color: red;
+      justify-content: center;
+      align-items: center;
+    }
+    .backbtn{
+      // background-color: black;
+      width: 15vw;
+    }
+    .centertitlediv{
+      // width: 70vw;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+    }
+  }
   .innerLabel{
     background-color: white;
     height: 40vh;
@@ -214,25 +247,28 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    // align-items: center;
+    align-items: center;
+    width: 100vw;
     gap: 2rem;
-    background-color: #000000;
+    // background-color: red;
     border-radius: 2rem;
-    padding: 3rem 5rem;
-  }
-  input {
-    background-color: transparent;
-    padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
-    width: 100%;
-    font-size: 1rem;
-    &:focus {
-      border: 0.1rem solid #997af0;
-      outline: none;
+    padding: 1rem 1rem;
+    .inputuser {
+      background-color: #0C1339;
+      padding: 0.6rem;
+      border: none;
+      border-bottom: 0.1rem solid white;
+     
+      color: white;
+      // width: 100%;
+      font-size: 1rem;
+      &:focus {
+        border-bottom: 0.1rem solid white;
+        outline: none;
+      }
     }
   }
+  
   button {
     background-color: #4e0eff;
     color: white;

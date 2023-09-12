@@ -16,11 +16,12 @@ import Stripe from 'stripe'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const Prices = () => {
+const CardsList = (props) => {
   const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
   const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
   {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -31,7 +32,7 @@ const Prices = () => {
   useEffect(() => {
     
 
-    // loadCards()
+    loadCards()
     // fetchPrices();
   }, [])
 
@@ -63,17 +64,14 @@ const Prices = () => {
 const closePopup= ()=>{
   setIsPopupOpen(false)
 }
-  const handlePlanChange = (event)=>{
-    const p = event.currentTarget.id
-    console.log("Plan selected " + p)
-    setPlan(p)
+  const handlePlanChange = (card)=>{
+    setSelectedCard(card)
+    console.log("Card selected ", card)
   }
 
-  const createSubscription = async (priceId) => {
+  const addNewCard = async (priceId) => {
     // setIsPopupOpen(true)
-    setPlan(priceId)
-    console.log("Cards list")
-    navigate("/cards", {
+    navigate("/addcard", {
       plan: plan,
       cards: cards,
     })
@@ -119,62 +117,57 @@ const closePopup= ()=>{
     return <Subscribe state={subscriptionData} />
   }
 
-  // if(user !== null && user.is_premium === true){
-  //   return (
-  //     <FormContainer className='bg-image '>
-        
-  //       <h1 >Already subscribed</h1>
-  //      </FormContainer>
-  //   )
-  // }
+  
 
   return (
-    <FormContainer className='bg-image'>
-      {/* <Elements  stripe={stripePromise}>
-          <ReactModal
-                isOpen={isAddCardPopupOpen}
-                contentLabel="Add card"
-                onRequestClose={()=>{setIsPopupOpen(false)}}
-                style={customStyles}
-                ariaHideApp={false}
-                className='row bg-red align-items-center justify-content-center'
-                >
-                <AddCard className='col-md-8' closePopup={closePopup} oncardAdded={loadCards} />
-          </ReactModal>
-      </Elements> */}
-      <div className='transparent-bg'>
+    <FormContainer className=''>
+      
+      {/* heading row */}
+      <div className='row headingrow  p-2'>
+        <div className='col-2 btn' onClick={() => {
+              console.log("Back button clicked")
+              navigate(-1)
+            }}>
+              <img className='backbtn' src="/backarrow.png"></img>
+        </div>
+        <div className='col centertitlediv'>
+            <p className='text-white text-center fs-6'> Select Card</p>
+        </div>
+
+        <div className='col-2 btn' onClick={() => {
+              console.log("Add Card Button clicked")
+              addNewCard()
+            }}>
+              <img className='backbtn' src="/addicon.png"></img>
+        </div>
       </div>
-          <div className='title'>
-          <p className='text-white fs-2' >Select a subscription plan</p>
-          </div>
 
-          <div className="price-list row">
-            {prices.map((price) => {
+
+          
+
+          <div className="price-list row bg-red">
+            {cards.map((card) => {
               return (
-                <div className={price.id == plan ? "price-containerselected " : "price-container "} key={price.id} id={price.id} onClick={handlePlanChange}>
-                  <div className='row pe-2'>
-                    <h3  className='text-white  col-7'>{price.name}</h3>
-                    
-                    <p className='text-white text-end fs-5 col-4 price-container-amount'>
-                      {price.unit_amount}
-                    </p>
-                    <p className='col-1'></p>
+                <div className={"row price-container "} key={card.stripecardid} id={card.stripecardid} onClick={() => {
+                  handlePlanChange(card)
+                }}>
+                  <div className='col brandingimages'>
+                    <img className='cardtick' src={(selectedCard != null && card.stripecardid == selectedCard.stripecardid) ? "/tickselected.png" : "/tickunselected.png"}></img>
+                    <img className='cardbrand ms-2' src={card.brand == "Visa" ? "/logo_visa.png" : "logo_mastercard.png"}></img>
+                    <div className='row ms-1 carddetails'>
+                      <p className='col-12 text-white fs-6 '>{card.cardnumber}</p>
+                      <p className='col-12 text-white fs-6 '>Expiry {card.expirydate}</p>
+                    </div>
                   </div>
-                  <div className='row'>
-                    <p className='text-white fs-6 col-6' >{price.trial}</p>
-                    <p className='col-4'></p>
-                    <img className='col-2 tickimage' src="/tickselected.png"></img>
-                  </div>
-
-              
-
                 </div>
               )
             })}
 
           </div>
           
-              <button className='col-8'  onClick={() => createSubscription(plan.id)}>
+              <button className='col-8'  onClick={() => {
+                console.log("Hello")
+              }}>
                   Continue
               </button>
             
@@ -190,10 +183,35 @@ height: 100vh;
   
   display: flex;
   flex-direction: column;
-  justify-content: center; // vertical center if column and horizontal if row
+  justify-content: top; // vertical center if column and horizontal if row
   gap: 1rem;
   align-items: center; //horizontal center
+  background-color: #0C1339;
+.headingrow{
+  padding-top: 1rem;
+  
+  justify-content: space-between;
+  align-items: center;
   background-color: transparent;
+  width: 100vw;
+  .btn{
+    display: flex;
+    flex-direction: row;
+    // background-color: red;
+    justify-content: center;
+    align-items: center;
+  }
+  .backbtn{
+    // background-color: black;
+    width: 15vw;
+  }
+  .centertitlediv{
+    // width: 70vw;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+  }
+}
 
   .transparent-bg{
     width: 100vw;
@@ -205,24 +223,7 @@ height: 100vh;
     z-index: -1;
     
   }
-  .title{
-    padding-left: 2rem;
-    display: flex;
-    // flex-grow: 1;
-    height: 1rem;
-    width: 100vw;
-    align-items: left;
-    background-color: transparent;
-    justify-content: left;
-  }
-  .heading{
-    font-size: 3.0vw;
-    font-weight: bold;
-  }
-
-  // h1, button{
-  //   z-index: 2;
-  // }
+  
   button{
     background-color: #FFFFFF15;
     color: white;
@@ -238,51 +239,60 @@ height: 100vh;
     }
     
   }
-  @media (max-width: 675px) {
-    button {
-      font-size: 2.4vh;
-      // font-weight: bold;
-    }
-    .heading{
-      font-size: 6vw;
-      font-weight: bold;
-    }
-  }
+ 
   
   .price-list{
+
     // z-index: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    padding: 0.5rem;
+    gap: 1rem;
+    padding: 1.5rem;
     background-color: transparent;
     border-radius: 0rem;
 
-    margin: 0.5rem;
+    // margin: 0.5rem;
     .price-container{
-      // box-sizing: border-box;
-      // z-index: 1;
-      flex-grow: 1;
-      // width: 15rem;
-      // margin: 0px,
-      border: gray solid 0.1rem;
-      // border-width: 1rem;
+      // flex-grow: 1;
+      border: none;
+      // height: 6rem;
       padding: 1rem;
       border-radius: 0.8rem;
-      margin-inline-end: 15px;
+      // margin-inline-end: 15px;
+      
+      background-color: #FFFFFF15;
+      .brandingimages{
+        justify-content: start;
+        align-items: center;
+        display: flex;
+      }
+      .carddetails{
+        display: flex;
+        flex-direction: column;
+        // background-color: red;
+        justify-content: center;
+        align-items: center;
+        gap: 0.0rem;
+        padding: 0;
+      }
       .tickimage{
         display: none;
       }
-      
+      .cardbrand{
+        width: 2rem;
+      }
+      .cardtick{
+        width: 1.5rem;
+      }
     }
     .price-containerselected{
       // z-index: 1;
       flex-grow: 1;
 
       // width: 15rem;
-      border: white solid 0.1rem;
+      border: none;
       // border-width: 1rem;
       padding: 1rem;
       border-radius: 0.8rem;
@@ -308,4 +318,4 @@ const customStyles = {
   },
   
 };
-export default (Prices);
+export default (CardsList);

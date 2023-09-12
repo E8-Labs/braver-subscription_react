@@ -8,17 +8,39 @@ import Prices from './Prices';
 import Register from './Register';
 import Subscribe from './Subscribe';
 
+
+// import {ElementsConsumer, PaymentElement, 
+//   CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
+import Stripe from 'stripe'
+import axios from 'axios';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
+
+
+
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import AddCard from './AddCard';
+import CardsList from './CardsList';
+
+
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 function App(props) {
   return (
+    <Elements stripe={stripePromise}>
     <BrowserRouter>
       <Routes>
       <Route exact path="/"  element={<Register />} >
         
       </Route>
+
+      <Route exact path="/cards"  element={<CardsList />} >
+        
+      </Route>
+      
       <Route path="/prices"  element={<Prices />} >
         
       </Route>
@@ -38,6 +60,7 @@ function App(props) {
       </Route>
     </Routes>
     </BrowserRouter>
+    </Elements>
   );
 }
 
