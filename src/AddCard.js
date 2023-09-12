@@ -182,7 +182,7 @@ function AddCard(props){
             </div>
             
             
-            <button type='submit' onClick={handleSubmit}>Add Card</button>
+            <button type='submit' onClick={handleSubmit}>Save Card</button>
         </form>
     </FormContainer>
     //  </Elements>
@@ -270,17 +270,17 @@ const FormContainer = styled.div`
   }
   
   button {
-    background-color: #4e0eff;
+    background-color: #FFFFFF15;
     color: white;
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 0.4rem;
+    border-radius: 0.9rem;
     font-size: 1rem;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #FFFFFF45;
     }
   }
   span {

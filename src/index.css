@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #0C1339;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -15,7 +16,7 @@ code {
 .text-white{
   color: white;
 }
-.bg-image{  background: url('../public/pricesbg.png'); background-color: #050A08;   
+.bg-image{  background: url('../public/pricesbg.png'); background-color: #0C1339;   
   height: 100vh;  width: 100vw;  background-size: 100% 100%;  position: absolute;
   left: 0; top: 0;  background-repeat: no-repeat;}
 

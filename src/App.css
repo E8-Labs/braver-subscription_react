@@ -2,13 +2,13 @@
 
 :root {
   --light-grey: #F6F9FC;
-  --dark-terminal-color: #0A2540;
+  --dark-terminal-color: #0C1339;
   --accent-color: #635BFF;
   --radius: 3px;
 }
 
 body {
-  padding: 20px;
+  padding: 0px;
   font-family: 'Raleway';
   display: flex;
   justify-content: center;
@@ -25,17 +25,7 @@ code {
     monospace;
 }
 
-/* prices.html */
-.price-list2 {
-  display: flex;
-}
 
-.price-list2 > div {
-  flex-grow: 3;
-  margin: 0 10px;
-  border: black solid 1px;
-  padding: 20px;
-}
 
 
 button {
@@ -91,24 +81,8 @@ fieldset, input, select {
 }
 
 
-#payment-form {
-  border: #F6F9FC solid 1px;
-  border-radius: var(--radius);
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 30px 50px -20px rgb(50 50 93 / 25%), 0 30px 60px -30px rgb(0 0 0 / 30%);
-}
 
 .bg-red{
   background-color: red;
 }
 
-#messages {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New';
-  background-color: #0A253C;
-  color: #00D924;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: var(--radius);
-  font-size:0.7em;
-}

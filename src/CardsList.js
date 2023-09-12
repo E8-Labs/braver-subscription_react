@@ -3,7 +3,7 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 
 
-import { useNavigate, withRouter } from 'react-router-dom';
+import { useNavigate, withRouter, useLocation } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components'
 import Subscribe from './Subscribe';
@@ -19,18 +19,20 @@ import Stripe from 'stripe'
 const CardsList = (props) => {
   const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("Params", location.state) 
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
-  {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
+  // const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
+  // {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);
   const [plan, setPlan] = useState("121h1283hser")
-  const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
+  // const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
+  // const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
 
   useEffect(() => {
-    
+    console.log("Props ", JSON.stringify(props.plan))
 
     loadCards()
     // fetchPrices();
@@ -62,7 +64,7 @@ const CardsList = (props) => {
   }
 
 const closePopup= ()=>{
-  setIsPopupOpen(false)
+  // setIsPopupOpen(false)
 }
   const handlePlanChange = (card)=>{
     setSelectedCard(card)
@@ -76,24 +78,29 @@ const closePopup= ()=>{
       cards: cards,
     })
   }
-  const createSubscription2 = async (priceId) => {
+
+  //change apis to accept th payment method
+  const createSubscription = async () => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
     console.log("User is " + user.userid)
     if(cards.length === 0){
       console.log("No cards, please add a card")
-      setIsPopupOpen(true)
+      
       
     }
     else{
       // process the payment using one of the cards or let user select the card
       console.log("Payment method added, now process the payment")
-      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", {
-          userid: user.userid,
-          plan: plan,
-          apikey: "kinsal0349"
-        });
+      const params = {userid: user.userid,
+        plan: location.state.plan,
+        apikey: "kinsal0349",
+        payment_method: selectedCard.stripecardid,
+      }
+console.log("Params ", params)
+// return;
+      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
         console.log("data loaded")
         if(data.data.status === "1"){
             console.log(data.data); // this will have the whole response from the api with status, message and data
@@ -146,27 +153,32 @@ const closePopup= ()=>{
           
 
           <div className="price-list row bg-red">
-            {cards.map((card) => {
-              return (
-                <div className={"row price-container "} key={card.stripecardid} id={card.stripecardid} onClick={() => {
-                  handlePlanChange(card)
-                }}>
-                  <div className='col brandingimages'>
-                    <img className='cardtick' src={(selectedCard != null && card.stripecardid == selectedCard.stripecardid) ? "/tickselected.png" : "/tickunselected.png"}></img>
-                    <img className='cardbrand ms-2' src={card.brand == "Visa" ? "/logo_visa.png" : "logo_mastercard.png"}></img>
-                    <div className='row ms-1 carddetails'>
-                      <p className='col-12 text-white fs-6 '>{card.cardnumber}</p>
-                      <p className='col-12 text-white fs-6 '>Expiry {card.expirydate}</p>
+            <ul className='list'>
+                {cards.map((card) => {
+                  return (
+                    <li>
+                    <div className={"row price-container "} key={card.stripecardid} id={card.stripecardid} onClick={() => {
+                      handlePlanChange(card)
+                    }}>
+                      <div className='col brandingimages'>
+                        <img className='cardtick' src={(selectedCard != null && card.stripecardid == selectedCard.stripecardid) ? "/tickselected.png" : "/tickunselected.png"}></img>
+                        <img className='cardbrand ms-2' src={card.brand == "Visa" ? "/logo_visa.png" : "logo_mastercard.png"}></img>
+                        <div className='row ms-1 carddetails'>
+                          <p className='col-12 text-white fs-6 '>{card.cardnumber}</p>
+                          <p className='col-12 text-white fs-6 '>Expiry {card.expirydate}</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )
-            })}
-
+                    <div className='row p-2'></div>
+                    </li>
+                  )
+                })}
+            </ul>
           </div>
           
               <button className='col-8'  onClick={() => {
-                console.log("Hello")
+                console.log("Make payment here")
+                createSubscription()
               }}>
                   Continue
               </button>
@@ -180,8 +192,9 @@ const closePopup= ()=>{
 const FormContainer = styled.div`
 height: 100vh;
   width: 100vw;
-  
+  background-size : cover;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   justify-content: top; // vertical center if column and horizontal if row
   gap: 1rem;
@@ -214,6 +227,7 @@ height: 100vh;
 }
 
   .transparent-bg{
+    background-size : cover;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -228,6 +242,7 @@ height: 100vh;
     background-color: #FFFFFF15;
     color: white;
     padding: 1rem 2rem;
+    margin-bottom: 1rem;
     border: none;
     // font-weight: normal;
     cursor: pointer;
@@ -252,8 +267,11 @@ height: 100vh;
     padding: 1.5rem;
     background-color: transparent;
     border-radius: 0rem;
-
-    // margin: 0.5rem;
+    overflow: auto;
+    .list{
+      gap: 2rem;
+      width: 90vw;
+    }
     .price-container{
       // flex-grow: 1;
       border: none;

@@ -73,10 +73,11 @@ const closePopup= ()=>{
     // setIsPopupOpen(true)
     setPlan(priceId)
     console.log("Cards list")
-    navigate("/cards", {
+    //{ state: { message: "Failed to submit form" } }
+    navigate("/cards", {state: {
       plan: plan,
       cards: cards,
-    })
+    }})
   }
   const createSubscription2 = async (priceId) => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
@@ -163,7 +164,7 @@ const closePopup= ()=>{
                   <div className='row'>
                     <p className='text-white fs-6 col-6' >{price.trial}</p>
                     <p className='col-4'></p>
-                    <img className='col-2 tickimage' src="/tickselected.png"></img>
+                    <img className=' tickimage' src="/tickselected.png"></img>
                   </div>
 
               
@@ -286,6 +287,13 @@ height: 100vh;
       // border-width: 1rem;
       padding: 1rem;
       border-radius: 0.8rem;
+      .tickimage{
+        display: flex;
+        width: 3.3rem;
+        height: 1.8rem;
+        display: flex;
+        
+      }
     }
   }
   .btndiv{

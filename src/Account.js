@@ -64,6 +64,12 @@ const Account = (props) => {
   const logout = (event)=>{
     console.log("Logout here")
   }
+
+  const cancelSubscription = (event) => {
+    console.log("Cancel subscription here")
+  }
+
+
   if(user === null){
     return (
       <div>
@@ -100,7 +106,7 @@ const Account = (props) => {
                     <p className='descriptiontext text-white'>This plan gives you full access to all resources for {user.plan.plan === "Yearly" ? " a year" : " a month"}</p>
 
                     <div className='col-auto ms-auto d-flex align-items-center justify-content-end'>
-                          <button onClick={logout}>Cancel Subscription</button>
+                          <button onClick={cancelSubscription}>Cancel Subscription</button>
                     </div>
               
 
