@@ -98,8 +98,7 @@ const closePopup= ()=>{
         apikey: "kinsal0349",
         payment_method: selectedCard.stripecardid,
       }
-console.log("Params ", params)
-// return;
+      console.log("Params ", params)
       const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
         console.log("data loaded")
         if(data.data.status === "1"){

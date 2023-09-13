@@ -21,6 +21,7 @@ const Prices = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
+  //process.env.REACT_APP_MONTHLY_PLAN
   const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
   {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);

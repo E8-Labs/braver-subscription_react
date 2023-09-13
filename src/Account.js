@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import { styled } from 'styled-components';
+import { Alert } from 'bootstrap/dist/js/bootstrap.bundle';
 
 const AccountSubscription = ({subscription}) => {
   return (
@@ -34,6 +35,7 @@ const AccountSubscription = ({subscription}) => {
 
 const Account = (props) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUserDetails = async(user) =>{
@@ -65,8 +67,71 @@ const Account = (props) => {
     console.log("Logout here")
   }
 
-  const cancelSubscription = (event) => {
+  const cancelSubscription = async(event) => {
     console.log("Cancel subscription here")
+    const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
+    const user = JSON.parse(d)
+    setUser(user)
+    console.log("User is " + user.userid)
+    
+      // Cancel subscription api call
+      const params = {userid: user.userid,
+        apikey: "kinsal0349",
+      }
+      console.log("Params ", params)
+
+      try{
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/cancel_subscription", params);
+        console.log("data loaded")
+        console.log(data.data);// this will have the whole response from the api with status, message and data
+        // toast(`User logged in as ${data.data.data.user.name}`);
+        if(data.data.status === "1"){
+            console.log(data.data.data); 
+            
+            navigate("/")
+        }
+        else{
+            // toast.error("Error : " + data.data.message)
+            // Alert.alert("Error : ", data.data.message)
+            console.log("Error " + data.data.message)
+        }
+      }
+      catch(error){
+        console.log("Exception ", error)
+      }
+    
+  }
+
+
+  //change apis to accept th payment method
+  const upgradeSubscription = async () => {
+    const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
+    const user = JSON.parse(d)
+    setUser(user)
+    console.log("User is " + user.userid)
+    
+      // process the payment using one of the cards or let user select the card
+      console.log("Payment method added, now process the payment")
+      const params = {userid: user.userid,
+        plan: "price_1Ne3NLC2y2Wr4BecgGF4TPG6",//process.env.REACT_APP_6MONTHLY_PLAN,
+        apikey: "kinsal0349",
+      }
+      console.log("Params ", params)
+      const data = await axios.post("https://braverhospitalityapp.com/braver/api/upgrade_subscription", params);
+        console.log("data loaded")
+        if(data.data.status === "1"){
+            console.log(data.data); // this will have the whole response from the api with status, message and data
+            // toast(`User logged in as ${data.data.data.user.name}`);
+            
+            navigate("/account", {
+              subscription: data.data.data
+            })
+        }
+        else{
+            // toast.error("Error : " + data.data.message)
+            console.log("Error " + data.data.message)
+        }
+    
   }
 
 
@@ -116,7 +181,7 @@ const Account = (props) => {
       {
         user.plan.plan === "Monthly" &&(
           <div className='col-auto my-5 d-flex align-items-center justify-content-center'>
-                          <button className='upgradebtn' onClick={logout}>Upgrade</button>
+                          <button className='upgradebtn' onClick={upgradeSubscription}>Upgrade</button>
           </div>
         )
       }
