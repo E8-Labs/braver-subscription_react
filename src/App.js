@@ -23,6 +23,7 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import AddCard from './AddCard';
 import CardsList from './CardsList';
+import PromoCode from './PromoCode';
 
 
 
@@ -34,6 +35,10 @@ function App(props) {
     <BrowserRouter>
       <Routes>
       <Route exact path="/"  element={<Register />} >
+        
+      </Route>
+
+      <Route exact path="/addpromocode"  element={<PromoCode />} >
         
       </Route>
 

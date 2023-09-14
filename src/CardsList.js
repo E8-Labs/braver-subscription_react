@@ -79,6 +79,18 @@ const closePopup= ()=>{
     })
   }
 
+  const loadPromoCodeScreen = () => {
+    if(cards.length === 0){
+      console.log("No cards, please add a card")
+    }
+    else{
+      navigate("/addpromocode", {state: {
+        plan: location.state.plan,
+        card: selectedCard,
+      }})
+    }
+    
+  }
   //change apis to accept th payment method
   const createSubscription = async () => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
@@ -177,7 +189,9 @@ const closePopup= ()=>{
           
               <button className='col-8'  onClick={() => {
                 console.log("Make payment here")
-                createSubscription()
+                //New Logic: Take user to promo code
+                loadPromoCodeScreen()
+                // createSubscription()
               }}>
                   Continue
               </button>

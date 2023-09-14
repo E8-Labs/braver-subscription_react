@@ -31,9 +31,6 @@ const Prices = () => {
 
   useEffect(() => {
     
-
-    // loadCards()
-    // fetchPrices();
   }, [])
 
 
