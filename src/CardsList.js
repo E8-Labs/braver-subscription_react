@@ -52,7 +52,9 @@ const CardsList = (props) => {
     })
     if(data.data.status === "1"){
       console.log(data.data);
-      setCards(data.data.data)
+      let arr = data.data.data || [];
+      arr.push({id: "addcard", stripecardid: ""})
+      setCards(arr)
       // navigate("/")
     }
     else{
@@ -165,9 +167,10 @@ const closePopup= ()=>{
 
           <div className="price-list row bg-red">
             <ul className='list'>
-                {cards.map((card) => {
+                {cards.map((card, index) => {
                   return (
-                    <li>
+                    index < cards.length - 1 ?(
+                      <li>
                     <div className={"row price-container "} key={card.stripecardid} id={card.stripecardid} onClick={() => {
                       handlePlanChange(card)
                     }}>
@@ -182,20 +185,33 @@ const closePopup= ()=>{
                     </div>
                     <div className='row p-2'></div>
                     </li>
+                    ) : 
+                    (
+                      <li className='justify-content-center align-items-center'>
+                          <button className='col-12'  onClick={() => {
+                            console.log("Make payment here")
+                            //New Logic: Take user to promo code
+                            loadPromoCodeScreen()
+                            // createSubscription()
+                          }}>
+                              Continue
+                          </button>
+                      </li>
+                    )
                   )
                 })}
             </ul>
           </div>
           
-              <button className='col-8'  onClick={() => {
-                console.log("Make payment here")
-                //New Logic: Take user to promo code
-                loadPromoCodeScreen()
-                // createSubscription()
-              }}>
-                  Continue
-              </button>
-            
+              
+          <button className='col-12'  onClick={() => {
+                            console.log("Make payment here")
+                            //New Logic: Take user to promo code
+                            loadPromoCodeScreen()
+                            // createSubscription()
+                          }}>
+                              Continue
+                          </button>
           
       
     </FormContainer>
