@@ -204,14 +204,14 @@ const closePopup= ()=>{
           </div>
           
               
-          <button className='col-12'  onClick={() => {
+          {/* <button className='col-12'  onClick={() => {
                             console.log("Make payment here")
                             //New Logic: Take user to promo code
                             loadPromoCodeScreen()
                             // createSubscription()
                           }}>
                               Continue
-                          </button>
+                          </button> */}
           
       
     </FormContainer>
