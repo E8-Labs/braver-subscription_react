@@ -95,7 +95,7 @@ function Register(){
       console.log("Params in UseEffect")
       console.log(params.hash)
       authUserWithWebAccessCode()
-    }, [])
+    })
 
 
     return(
