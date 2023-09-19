@@ -8,6 +8,7 @@ import axios from 'axios';
 import {ToastContainer, toast} from 'react-toastify';
 // Import toastify css file
 import 'react-toastify/dist/ReactToastify.css';
+import { sha512 } from 'ethers';
 // toast.configure()
 
 function PromoCode(props){
@@ -86,7 +87,8 @@ function PromoCode(props){
                 // toast(`User logged in as ${data.data.data.user.name}`);
                 
                 navigate("/account", {
-                  subscription: data.data.data
+                  subscription: data.data.data,
+                  replace: true,
                 })
             }
             else{

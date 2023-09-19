@@ -1,5 +1,5 @@
 import react, {useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 // import Logo from '../assets/logo.png'
 // import AppIcon from '../assets/appicon.svg'
@@ -12,6 +12,9 @@ import axios from 'axios';
 
 function Register(){
     const navigate = useNavigate();
+    const params = useParams();
+    console.log("Params are ")
+    console.log(params.hash)
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -53,23 +56,46 @@ function Register(){
         
     }
 
+    const authUserWithWebAccessCode = async() => {
+      let code = params.hash;
+      // const {code: code} = values;
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/check_web_access_code", {
+          code: code,
+          apikey: "kinsal0349"
+        });
+        if(data.data.status === "1"){
+            console.log(data.data); // this will have the whole response from the api with status, message and data
+            // toast(`User logged in as ${data.data.data.user.name}`);
+            localStorage.setItem(process.env.REACT_APP_LocalSavedUser, JSON.stringify(data.data.data));
+            if(data.data.data.plan.status === "active" || data.data.data.plan.status === "trialing"){
+              navigate("/account", {
+                user: data.data.data
+              })
+            }
+            else{
+              navigate("/prices")
+            }
+        }
+        else{
+            // toast.error("Error : " + data.data.message)
+            console.log("Error " + data.data.message)
+        }
+    }
+
     const handleChange = (event)=>{
       setValues({...values, [event.target.name]: event.target.value })
       
     }
     const handleValidation = ()=>{
       const {password, email} = values;
-    //   if(password !== confirmPassword){
-    //     toast.error("Passwords do not match", {
-    //       position: "bottom-right",
-    //       pauseOnHover: true,
-    //       autoClose: 8000,
-    //       theme: "dark"
-    //     });
-    //     return false;
-    //   }
       return true;
     }
+
+    useEffect(() => {
+      console.log("Params in UseEffect")
+      console.log(params.hash)
+      authUserWithWebAccessCode()
+    }, [])
 
 
     return(

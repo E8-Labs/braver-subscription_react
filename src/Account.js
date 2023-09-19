@@ -88,7 +88,9 @@ const Account = (props) => {
         if(data.data.status === "1"){
             console.log(data.data.data); 
             
-            navigate("/")
+            navigate("/", {
+              replace: true,
+            })
         }
         else{
             // toast.error("Error : " + data.data.message)
