@@ -34,7 +34,7 @@ function App(props) {
     <Elements stripe={stripePromise}>
     <BrowserRouter>
       <Routes>
-      <Route exact path="/:hash"  element={<Register />} >
+      <Route exact path="/:hash?"  element={<Register />} >
         
       </Route>
 

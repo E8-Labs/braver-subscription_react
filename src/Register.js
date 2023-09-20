@@ -15,10 +15,15 @@ function Register(){
     const params = useParams();
     console.log("Params are ")
     console.log(params.hash)
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-  })
+    const [values, setValues] = useState({
+       email: "",
+       password: "",
+    })
+
+    const [authenticating, setAuthenticating] = useState(false);
+
+
+
     const handleSubmit = async (event)=>{
       console.log("Callin api");
         event.preventDefault();
@@ -59,11 +64,14 @@ function Register(){
     const authUserWithWebAccessCode = async() => {
       let code = params.hash;
       // const {code: code} = values;
+      setAuthenticating(true)
         const data = await axios.post("https://braverhospitalityapp.com/braver/api/check_web_access_code", {
           code: code,
           apikey: "kinsal0349"
         });
+        setAuthenticating(false)
         if(data.data.status === "1"){
+          
             console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             localStorage.setItem(process.env.REACT_APP_LocalSavedUser, JSON.stringify(data.data.data));
@@ -95,8 +103,23 @@ function Register(){
       console.log("Params in UseEffect")
       console.log(params.hash)
       authUserWithWebAccessCode()
-    })
+    }, [])
 
+    if(authenticating){
+      return(
+        <div className='row' style={{width: '100vw', height: '100vh', justifyContent: 'center', alignItems: 'center',
+          backgroundColor: '#0C1339'}}>
+          <div className='col-12' style={{height: '30vh', justifyContent: 'center', alignItems: 'center',
+          backgroundColor: 'transparent'}}>
+            <h2 className='text-white  text-center'>Authenticating...</h2>
+            <label className='text-white text-center' style={{width: '100vw'}}>Please wait</label>
+          </div>
+        </div>
+      )
+    }
+    else{
+
+    }
 
     return(
     <>

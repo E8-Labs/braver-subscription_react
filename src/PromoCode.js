@@ -14,7 +14,7 @@ import { sha512 } from 'ethers';
 function PromoCode(props){
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
-    const [codes, setCodes] = useState([{code: "Braver23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"}])
+    const [codes, setCodes] = useState([{code: "Braver23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"}, {code: "BraverLife", id: "promo_1NsInbC2y2Wr4BecM5juUa5v"}, {code: "BraverYr23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"},])
     const location = useLocation()
     const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
 
