@@ -14,7 +14,7 @@ let envr = process.env.REACT_APP_ENVIRONMENT;
 
 let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY;
 
-let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE}] 
+let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}] 
 : [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
 
 function PromoCode(props){
