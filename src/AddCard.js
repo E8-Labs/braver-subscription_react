@@ -33,11 +33,12 @@ const CARD_ELEMENT_OPTIONS = {
     },
   },
 };
+let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
 
 function AddCard(props){
     const navigate = useNavigate();
     const location = useLocation()
-    const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
+    const stripe = Stripe(stripeKey);
 
     const stripeReact = useStripe();
   const elements = useElements();

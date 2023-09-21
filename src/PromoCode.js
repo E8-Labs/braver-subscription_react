@@ -11,12 +11,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { sha512 } from 'ethers';
 // toast.configure()
 
+let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+
 function PromoCode(props){
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
     const [codes, setCodes] = useState([{code: "Braver23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"}, {code: "BraverLife", id: "promo_1NsInbC2y2Wr4BecM5juUa5v"}, {code: "BraverYr23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"},])
     const location = useLocation()
-    const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
+    const stripe = Stripe(stripeKey);
 
     const stripeReact = useStripe();
   const elements = useElements();

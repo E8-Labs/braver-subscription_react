@@ -16,14 +16,24 @@ import Stripe from 'stripe'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
+let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+
+
+
+let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [{id: process.env.REACT_APP_MONTHLY_PLAN_LIVE, name: "Monthly Plan", unit_amount: "$199.99/mo", trial: "90 day free trial"},
+{id: process.env.REACT_APP_YEARLY_PLAN_LIVE, name: "Yearly Plan", unit_amount: "$1999.99/yr", trial: "90 day free trial"}] : 
+
+[{id: process.env.REACT_APP_MONTHLY_PLAN, name: "Monthly Plan", unit_amount: "$199.99/mo", trial: "90 day free trial"},
+  {id: process.env.REACT_APP_6MONTHLY_PLAN, name: "Yearly Plan", unit_amount: "$1999.99/yr", trial: "90 day free trial"}]
+
 const Prices = () => {
-  const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
+  const stripe = Stripe(stripeKey);
+  console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   //process.env.REACT_APP_MONTHLY_PLAN
-  const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$199.99/mo", trial: "90 day free trial"},
-  {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "Yearly Plan", unit_amount: "$1999.99/yr", trial: "90 day free trial"}]);
+  const [prices, setPrices] = useState(pricesArray);
   const [subscriptionData, setSubscriptionData] = useState(null);
   const [plan, setPlan] = useState("121h1283hser")
   const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);

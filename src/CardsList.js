@@ -15,9 +15,10 @@ import axios from 'axios';
 import Stripe from 'stripe'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-
+let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
 const CardsList = (props) => {
-  const stripe = Stripe(process.env.REACT_APP_STRIPE_SECRET_KEY);
+  const stripe = Stripe(process.env.stripeKey);
+  console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
   const navigate = useNavigate();
   const location = useLocation();
   console.log("Params", location.state) 

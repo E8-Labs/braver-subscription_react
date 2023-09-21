@@ -26,6 +26,7 @@ function Register(){
 
     const handleSubmit = async (event)=>{
       console.log("Callin api");
+      console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
         event.preventDefault();
         const validation = handleValidation()
         // navigate("/prices")
