@@ -10,13 +10,18 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { sha512 } from 'ethers';
 // toast.configure()
+let envr = process.env.REACT_APP_ENVIRONMENT;
 
-let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY;
+
+let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE}] 
+: [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
 
 function PromoCode(props){
+  console.log(promosArray)
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
-    const [codes, setCodes] = useState([{code: "Braver23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"}, {code: "BraverLife", id: "promo_1NsInbC2y2Wr4BecM5juUa5v"}, {code: "BraverYr23", id: "promo_1NqB0NC2y2Wr4BecXhZvEzeA"},])
+    const [codes, setCodes] = useState(promosArray)
     const location = useLocation()
     const stripe = Stripe(stripeKey);
 
