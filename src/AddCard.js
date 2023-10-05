@@ -1,10 +1,16 @@
-import react, {useState, useEffect} from 'react'
+import react, {useState, useEffect, useMemo} from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import {ElementsConsumer, PaymentElement, 
-  CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
+  CardElement, useStripe, useElements, CardNumberElement,
+  CardCvcElement,
+  CardExpiryElement} from '@stripe/react-stripe-js';
 import Stripe from 'stripe'
 import axios from 'axios';
+
+import {ToastContainer, toast} from 'react-toastify';
+// Import toastify css file
+import 'react-toastify/dist/ReactToastify.css';
 // import {Elements} from '@stripe/react-stripe-js';
 // import {loadStripe} from '@stripe/stripe-js';
 
@@ -34,21 +40,96 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+const appearance = {
+  theme: 'night',
+  variables: {
+    fontFamily: 'Sohne, system-ui, sans-serif',
+    fontWeightNormal: '500',
+    borderRadius: '8px',
+    colorBackground: '#0A2540',
+    colorPrimary: '#EFC078',
+    colorPrimaryText: '#1A1B25',
+    colorText: 'white',
+    colorTextSecondary: 'white',
+    colorTextPlaceholder: '#727F96',
+    colorIconTab: 'white',
+    colorLogo: 'dark'
+  },
+  rules: {
+    '.Input, .Block': {
+      backgroundColor: 'transparent',
+      border: '1.5px solid var(--colorPrimary)'
+    }
+  }
+};
+
+
+
+const useOptions = () => {
+  const fontSize = 12;//useResponsiveFontSize();
+  const options = useMemo(
+      () => ({
+          style: {
+              base: {
+                  fontSize,
+                  color: "#424770",
+                  letterSpacing: "0.025em",
+                  fontFamily: "Roboto, Source Code Pro, monospace, SFUIDisplay",
+                  "::placeholder": {
+                      color: "#aab7c4"
+                  }
+              },
+              invalid: {
+                  color: "#9e2146"
+              },
+
+          }
+      }),
+      [fontSize]
+  );
+
+  return options;
+};
+
+
 
 function AddCard(props){
+  
     const navigate = useNavigate();
     const location = useLocation()
     const stripe = Stripe(stripeKey);
 
     const stripeReact = useStripe();
   const elements = useElements();
+  // const elements = stripe.elements({clientSecret, appearance});
+  // let card = elements.cre
     
   const [values, setValues] = useState({
     cardnumber: "",
     cardholdername: "",
     cvv: "",
-    expirydate: ""
+    expirydate: "",
+    
   })
+
+  function getExpiryFromDate () {
+    const {cardholdername, cardnumber, cvv, expirydate} = values;
+    const myArray = expirydate.split("/");
+    if(myArray.length === 2){
+        let m = Number(myArray[0].trim()) || 0;
+        let y = Number(myArray[1].trim()) || 0;
+        console.log("Month " + m + " Year " + y)
+        return [m, y];
+
+    }
+    else{
+      
+      console.log("Invalid expiry");
+      return null;
+    }
+  }
+
+  
 
   const handleSubmitStripeCardElement = (event) => {
     if (!stripe || !elements) {
@@ -57,7 +138,8 @@ function AddCard(props){
       return;
     }
     const card = elements.getElement(CardElement);
-    // console.log(card)
+    console.log("User element card is ")
+    console.log(card)
     stripeReact.createToken(card).then(function(result) {
       // Handle result.error or result.token
       console.log("result creating token")
@@ -67,7 +149,7 @@ function AddCard(props){
   }
     const handleSubmit = async (event)=>{
       console.log("Callin api");
-      console.log("Stripe Secret Key " + process.env.REACT_APP_STRIPE_SECRET_KEY);
+      console.log("Stripe Secret Key " + stripeKey);
     //   this.props.closePopup()
         event.preventDefault();
         const validation = handleValidation()
@@ -78,53 +160,75 @@ function AddCard(props){
       else{
 
         const {cardholdername, cardnumber, cvv, expirydate} = values;
+        // const card = elements.getElement('card');
+        if (!stripe || !elements) {
+          // Stripe.js hasn't yet loaded.
+          console.log("Stripe not initialized")
+          return;
+        }
+        const card = elements.getElement(CardElement);
+        // const nm = elements.getElement('cardNumber');
+        // console.log("Card number ", nm);
+        // card.update({value: {cardNumber: cardnumber}});
+        // card.update({value: {cardExpiry: expirydate}});
+        // card.update({value: {cardCvc: cvv}});
+    console.log("User element card is ")
+    console.log(card)
+    stripeReact.createToken(card).then( async function(tok) {
+      // Handle result.error or result.token
+      console.log("result creating token")
+      console.log(tok) //contains a card object as well
+      if(tok.token.id){
+
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
         console.log("User is " + user.userid)
+        if(user === null){
+          return;
+        }
+        console.log("Token obtained " + tok.id)
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
+            cardnumber: "*****",
+            cardholdername: "*****",
+            cvc: "*****",
+            expirydate: "*****",
+            userid: user.userid,
+            apikey: "kinsal0349",
+            source: tok.token.id
+        });
+        if(data.data.status === "1"){
+            console.log(data.data); // this will have the whole response from the api with status, message and data
+            // navigate("/prices")
+            // props.oncardAdded()
+            // props.closePopup()
+            
+            navigate(-1)
+        }
+        else{
+            console.log( data.data)
+            console.log("Error " + JSON.stringify(data.data.validation_errors))
+            toast.error(data.data.message, {
+              position: "bottom-right",
+              pauseOnHover: true,
+              autoClose: 8000,
+              theme: "dark"
+            });
+        }
+    }
+    else if (tok.error){
+      console.log("Error ")
+      console.log(tok.error)
+      toast.error(tok.error, {
+        position: "bottom-right",
+        pauseOnHover: true,
+        autoClose: 8000,
+        theme: "dark"
+      });
+    }
+    });
+        
+        
 
-//uncomment below code to generate tokens when in live mode
-        // const tok = await stripe.tokens.create({
-        //     card: {
-        //       number: cardnumber,
-        //       exp_month: 8,
-        //       exp_year: 2024,
-        //       cvc: cvv,
-        //     },
-        //   }, function(err, token) {
-        //     // asynchronously called
-        //     console.log("Error creating token")
-        //     console.log(err)
-        //   });
-
-        const tok = {id: "tok_visa"};
-            console.log("Creating token")
-             console.log(tok)
-            if(tok){
-                if(tok.id){
-                    console.log("Token obtained " + tok.id)
-                    const data = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
-                        cardnumber: cardnumber,
-                        cardholdername: cardholdername,
-                        cvc: cvv,
-                        expirydate: expirydate,
-                        userid: "60ca7a842d8b8",
-                        apikey: "kinsal0349",
-                        source: tok.id
-                    });
-                    if(data.data.status === "1"){
-                        console.log(data.data); // this will have the whole response from the api with status, message and data
-                        // navigate("/prices")
-                        // props.oncardAdded()
-                        // props.closePopup()
-                        
-                        navigate(-1)
-                    }
-                    else{
-                        console.log( data.data)
-                        console.log("Error " + JSON.stringify(data.data.validation_errors))
-                    }
-                }
-            }
 
         
       }
@@ -139,12 +243,12 @@ function AddCard(props){
     const handleValidation = ()=>{
       const {password, email} = values;
     //   if(password !== confirmPassword){
-    //     toast.error("Passwords do not match", {
-    //       position: "bottom-right",
-    //       pauseOnHover: true,
-    //       autoClose: 8000,
-    //       theme: "dark"
-    //     });
+        // toast.error("Passwords do not match", {
+        //   position: "bottom-right",
+        //   pauseOnHover: true,
+        //   autoClose: 8000,
+        //   theme: "dark"
+        // });
     //     return false;
     //   }
       return true;
@@ -152,6 +256,7 @@ function AddCard(props){
 
 
     return(
+      
     <FormContainer >
       <div className='row headingrow  p-2'>
         <div className='col-2 btn' onClick={() => {
@@ -173,18 +278,29 @@ function AddCard(props){
       </div>
         <form >
             
+            <div className='col-12 '>
+              <CardElement className='card' options={{
+                style: {
+                  base: {
+                    backgroundColor: "white"
+                  } 
+                },
+              }}/>
             
-            
-            <input className='inputuser' type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
-            <input className='inputuser' type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></input>
-            <div className='row justify-content-around'>
-              <input className='inputuser col-5' type='text' placeholder='Expiry Date' name='expirydate' onChange={e => handleChange(e)}></input>
-              <input className='inputuser col-5' type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></input>
             </div>
+
+        
+            {/* <input className='inputuser' type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
+            <CardNumberElement   className='inputuser' type='text' placeholder='Card Number' name='cardnumber' onChange={e => handleChange(e)}></CardNumberElement>
+            <div className='row justify-content-around'>
+              <CardExpiryElement   className='inputuser col-5' type='text'  name='expirydate' onChange={e => handleChange(e)}></CardExpiryElement>
+              <CardCvcElement   className='inputuser col-5' type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></CardCvcElement>
+            </div> */}
             
             
             <button type='submit' onClick={handleSubmit}>Save Card</button>
         </form>
+        <ToastContainer />
     </FormContainer>
     //  </Elements>
     );
@@ -293,6 +409,24 @@ const FormContainer = styled.div`
       font-weight: bold;
     }
   }
+
+  .toast-message {
+    background: red;
+    color: #fff;
+    font-size: 1rem;
+    width: 100vw;
+    height: 5vh;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+.card {
+  background-color: white;
+  padding: 10px 20px 11px;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #afafaf;
+  box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+}
 `;
 
 

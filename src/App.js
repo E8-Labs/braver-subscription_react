@@ -7,13 +7,14 @@ import Cancel from './Cancel';
 import Prices from './Prices';
 import Register from './Register';
 import Subscribe from './Subscribe';
+import PaymentForm from './PaymentForm';
 
 
 // import {ElementsConsumer, PaymentElement, 
 //   CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
 import Stripe from 'stripe'
 import axios from 'axios';
-import {Elements} from '@stripe/react-stripe-js';
+import {useElements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 
 
@@ -26,15 +27,25 @@ import CardsList from './CardsList';
 import PromoCode from './PromoCode';
 
 
+// const stripePromise = loadStripe('pk_test_51JfmvpC2y2Wr4BecD5qeIqkwOaNCMScIgL6TdhNQNoFdNkMbqKhSn3xjrC5K9X483QuMApm7h8uAnjcDW7XMqHmy00vHYLByuW');
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+
 
 function App(props) {
+  const elements = useElements()
+
+
+
+
   return (
-    <Elements stripe={stripePromise}>
+    // <Elements stripe={stripePromise}>
     <BrowserRouter>
       <Routes>
       <Route exact path="/:hash?"  element={<Register />} >
+        
+      </Route>
+
+      <Route exact path="/checkout"  element={<PaymentForm />} >
         
       </Route>
 
@@ -65,7 +76,7 @@ function App(props) {
       </Route>
     </Routes>
     </BrowserRouter>
-    </Elements>
+    // </Elements>
   );
 }
 
