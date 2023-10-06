@@ -11,6 +11,10 @@ import Subscribe from './Subscribe';
 import ReactModal from 'react-modal';
 import AddCard from './AddCard';
 
+import {ToastContainer, toast} from 'react-toastify';
+// Import toastify css file
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from 'axios';
 import Stripe from 'stripe'
 
@@ -83,8 +87,14 @@ const closePopup= ()=>{
   }
 
   const loadPromoCodeScreen = () => {
-    if(cards.length === 0){
+    if(cards.length === 1){ // only the button is in the array
       console.log("No cards, please add a card")
+      toast.error("No cards added, please add a card first", {
+        position: "bottom-right",
+        pauseOnHover: true,
+        autoClose: 8000,
+        theme: "dark"
+      });
     }
     else{
       navigate("/addpromocode", {state: {
@@ -100,9 +110,14 @@ const closePopup= ()=>{
     const user = JSON.parse(d)
     setUser(user)
     console.log("User is " + user.userid)
-    if(cards.length === 0){
+    if(cards.length === 1){
       console.log("No cards, please add a card")
-      
+      toast.error("No cards added, please add a card first", {
+        position: "bottom-right",
+        pauseOnHover: true,
+        autoClose: 8000,
+        theme: "dark"
+      });
       
     }
     else{
@@ -177,7 +192,7 @@ const closePopup= ()=>{
                     }}>
                       <div className='col brandingimages'>
                         <img className='cardtick' src={(selectedCard != null && card.stripecardid == selectedCard.stripecardid) ? "/tickselected.png" : "/tickunselected.png"}></img>
-                        <img className='cardbrand ms-2' src={card.brand == "Visa" ? "/logo_visa.png" : "logo_mastercard.png"}></img>
+                        <img className='cardbrand ms-2' src={card.cardbrand == "Visa" ? "/logo_visa.png" : "logo_mastercard.png"}></img>
                         <div className='row ms-1 carddetails'>
                           <p className='col-12 text-white fs-6 '>{card.cardnumber}</p>
                           <p className='col-12 text-white fs-6 '>Expiry {card.expirydate}</p>
@@ -213,7 +228,7 @@ const closePopup= ()=>{
                           }}>
                               Continue
                           </button> */}
-          
+          <ToastContainer />
       
     </FormContainer>
   );

@@ -115,7 +115,7 @@ const Account = (props) => {
       // process the payment using one of the cards or let user select the card
       console.log("Payment method added, now process the payment")
       const params = {userid: user.userid,
-        plan: "price_1Ne3NLC2y2Wr4BecgGF4TPG6",//process.env.REACT_APP_6MONTHLY_PLAN,
+        plan: process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_YEARLY_PLAN_LIVE : process.env.REACT_APP_6MONTHLY_PLAN,//process.env.REACT_APP_6MONTHLY_PLAN,
         apikey: "kinsal0349",
       }
       console.log("Params ", params)
