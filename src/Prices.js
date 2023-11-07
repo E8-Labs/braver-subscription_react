@@ -8,11 +8,15 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components'
 import Subscribe from './Subscribe';
 
+
 import ReactModal from 'react-modal';
 import AddCard from './AddCard';
 
 import axios from 'axios';
 import Stripe from 'stripe'
+
+
+// import {Logo} from './braver logo.png'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
@@ -139,20 +143,10 @@ const closePopup= ()=>{
 
   return (
     <FormContainer className='bg-image'>
-      {/* <Elements  stripe={stripePromise}>
-          <ReactModal
-                isOpen={isAddCardPopupOpen}
-                contentLabel="Add card"
-                onRequestClose={()=>{setIsPopupOpen(false)}}
-                style={customStyles}
-                ariaHideApp={false}
-                className='row bg-red align-items-center justify-content-center'
-                >
-                <AddCard className='col-md-8' closePopup={closePopup} oncardAdded={loadCards} />
-          </ReactModal>
-      </Elements> */}
+      
       <div className='transparent-bg'>
       </div>
+        <img className='logo' src='/braverlogo.png' alt='Braver Logo' height={200}></img>
           <div className='title'>
           <p className='text-white fs-2' >Select a subscription plan</p>
           </div>
@@ -212,7 +206,7 @@ height: 100vh;
     top: 0;
     left: 0;
     z-index: -1;
-    
+    background-color: #0C1339; 
   }
   .title{
     padding-left: 2rem;

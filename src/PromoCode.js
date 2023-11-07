@@ -21,6 +21,7 @@ function PromoCode(props){
   console.log(promosArray)
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
+    const [codeValid, setCodeValid] = useState(false);
     const [codes, setCodes] = useState(promosArray)
     const location = useLocation()
     const stripe = Stripe(stripeKey);
@@ -55,7 +56,21 @@ function PromoCode(props){
     const handleChange = (event)=>{
     //   setValues({...values, [event.target.name]: event.target.value })
       setCode(event.target.value)
-      
+      let codeid = null;
+        if(code !== null){
+            for(let i = 0; i < codes.length; i++){
+                if(codes[i].code === event.target.value){
+                    codeid = codes[i].id;
+                }
+            }
+        }
+        if(codeid === null && code !== null){
+            console.log("Invalid promo code")
+            setCodeValid(false)
+        }
+        else{
+          setCodeValid(true)
+        }
     }
     const createSubscription = async () => {
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
@@ -76,6 +91,7 @@ function PromoCode(props){
           })
         }
         else{
+          setCodeValid(true)
             console.log("User is " + user.userid)
         
           // process the payment using one of the cards or let user select the card
@@ -131,7 +147,11 @@ function PromoCode(props){
       </div>
         <form >
             <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChange(e)}></input>
-            
+            <div className='row'>
+              <div className='col-1'></div>
+              <label className='disclaimer'>{codeValid ? "Total amount: USD 0" : ""}</label>
+              <div className='col-1'></div>
+            </div>
         </form>
         <button  onClick={() => {
                 createSubscription()
@@ -152,6 +172,10 @@ const FormContainer = styled.div`
   align-items: center; //horizontal center
   background-color: #0C1339;
 
+  .disclaimer{
+    color: white;
+    text-align: center;
+  }
   .headingrow{
     padding-top: 1rem;
     

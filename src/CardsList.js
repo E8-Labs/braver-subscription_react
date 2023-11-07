@@ -20,6 +20,19 @@ import Stripe from 'stripe'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+let envr = process.env.REACT_APP_ENVIRONMENT;
+
+let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}] 
+: [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
+
+
+
+
+
+
+
+
+
 const CardsList = (props) => {
   const stripe = Stripe(process.env.stripeKey);
   console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
@@ -29,6 +42,7 @@ const CardsList = (props) => {
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [promo, setPromo] = useState(null);
   // const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
   // {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -37,8 +51,14 @@ const CardsList = (props) => {
   // const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
 
   useEffect(() => {
-    console.log("Props ", JSON.stringify(props.plan))
-
+    console.log("Props In CardList ", JSON.stringify(location.state.plan))
+    if(localStorage.promo_temp){
+      console.log("Have Temp Promp Code ", localStorage.promo_temp)
+      setPromo(localStorage.promo_temp);
+    }
+    else {
+      console.log("Nothing in local storage")
+     }
     loadCards()
     // fetchPrices();
   }, [])
@@ -73,6 +93,10 @@ const CardsList = (props) => {
 const closePopup= ()=>{
   // setIsPopupOpen(false)
 }
+
+function  promoCodeEdited (code) {
+  setPromo(code)
+}
   const handlePlanChange = (card)=>{
     setSelectedCard(card)
     console.log("Card selected ", card)
@@ -80,10 +104,52 @@ const closePopup= ()=>{
 
   const addNewCard = async (priceId) => {
     // setIsPopupOpen(true)
-    navigate("/addcard", {
-      plan: plan,
-      cards: cards,
-    })
+    navigate("/addcard", {state: {
+      // promoCodeEdited: {promoCodeEdited},
+      plan: location.state.plan,
+    }})
+  }
+
+  const createSubscription = async () => {
+    const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
+    const user = JSON.parse(d)
+    const codeid = localStorage.promo_id;
+    // if(codeid === null && code !== null){
+    //     console.log("Invalid promo code")
+    //     toast('Invalid Promo Code', {
+    //       position: toast.POSITION.BOTTOM_CENTER,
+    //       className: 'toast-message'
+    //   })
+    // }
+    // else{
+        console.log("User is " + user.userid)
+    
+      // process the payment using one of the cards or let user select the card
+      console.log("Payment method added, now process the payment")
+      const params = {userid: user.userid,
+        plan: location.state.plan,
+        apikey: "kinsal0349",
+        payment_method: selectedCard ? selectedCard.stripecardid : null,
+        "promo_code": codeid,
+      }
+      console.log("Params ", params)
+      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
+        console.log("data loaded")
+        if(data.data.status === "1"){
+            console.log(data.data); // this will have the whole response from the api with status, message and data
+            // toast(`User logged in as ${data.data.data.user.name}`);
+            
+            navigate("/account", {
+              subscription: data.data.data,
+              replace: true,
+            })
+        }
+        else{
+            // toast.error("Error : " + data.data.message)
+            console.log("Error " + data.data.message)
+        }
+    // }
+   
   }
 
   const loadPromoCodeScreen = () => {
@@ -97,55 +163,21 @@ const closePopup= ()=>{
       });
     }
     else{
-      navigate("/addpromocode", {state: {
-        plan: location.state.plan,
-        card: selectedCard,
-      }})
-    }
-    
-  }
-  //change apis to accept th payment method
-  const createSubscription = async () => {
-    const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
-    setUser(user)
-    console.log("User is " + user.userid)
-    if(cards.length === 1){
-      console.log("No cards, please add a card")
-      toast.error("No cards added, please add a card first", {
-        position: "bottom-right",
-        pauseOnHover: true,
-        autoClose: 8000,
-        theme: "dark"
-      });
-      
-    }
-    else{
-      // process the payment using one of the cards or let user select the card
-      console.log("Payment method added, now process the payment")
-      const params = {userid: user.userid,
-        plan: location.state.plan,
-        apikey: "kinsal0349",
-        payment_method: selectedCard.stripecardid,
+      if(promo == null){ // if promo is null then go to get the promo code
+        navigate("/addpromocode", {state: {
+          plan: location.state.plan,
+          card: selectedCard,
+        }})
       }
-      console.log("Params ", params)
-      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
-        console.log("data loaded")
-        if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
-            // toast(`User logged in as ${data.data.data.user.name}`);
-            
-            navigate("/account", {
-              subscription: data.data.data
-            })
-        }
-        else{
-            // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
-        }
+      else{
+        console.log("Promo is not null so load the payment screen")
+        createSubscription()
+        // take the user to subscription screen
+      }
     }
     
   }
+  
 
   
 
@@ -186,7 +218,7 @@ const closePopup= ()=>{
                 {cards.map((card, index) => {
                   return (
                     index < cards.length - 1 ?(
-                      <li>
+                      <li key={card.stripecardid}>
                     <div className={"row price-container "} key={card.stripecardid} id={card.stripecardid} onClick={() => {
                       handlePlanChange(card)
                     }}>

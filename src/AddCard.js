@@ -22,6 +22,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
+
+let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+let envr = process.env.REACT_APP_ENVIRONMENT;
+
+let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}] 
+: [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
+
+
+
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
@@ -39,7 +48,7 @@ const CARD_ELEMENT_OPTIONS = {
     },
   },
 };
-let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+
 const appearance = {
   theme: 'night',
   variables: {
@@ -98,6 +107,7 @@ function AddCard(props){
     const navigate = useNavigate();
     const location = useLocation()
     const stripe = Stripe(stripeKey);
+    const [codes, setCodes] = useState(promosArray)
 
     const stripeReact = useStripe();
   const elements = useElements();
@@ -148,6 +158,20 @@ function AddCard(props){
     });
   }
     const handleSubmit = async (event)=>{
+
+      // let codeid = null;
+      //   if(localStorage.promo_temp !== null){
+      //       for(let i = 0; i < codes.length; i++){
+      //           if(codes[i].code === localStorage.promo_temp){
+      //               codeid = codes[i].id;
+      //           }
+      //       }
+      //   }
+      //   if(localStorage.promo_temp != null && codeid == null){
+      //     console.log("Invalid promo code")
+      //     return
+      //   }
+        // localStorage.setItem("promo_id", codeid);
       console.log("Callin api");
       console.log("Stripe Secret Key " + stripeKey);
     //   this.props.closePopup()
@@ -185,7 +209,7 @@ function AddCard(props){
         console.log("User is " + user.userid)
         if(user === null){
           return;
-        }
+        }//cus_JgU9iurcpCxLOx
         console.log("Token obtained " + tok.id)
         const data = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
             cardnumber: "*****",
@@ -235,6 +259,15 @@ function AddCard(props){
         // alert("form");
         
     }
+
+    const handleChangePromo = (event)=>{
+      //   setValues({...values, [event.target.name]: event.target.value })
+      console.log("Props in add card");
+      console.log(location.state)
+      localStorage.setItem("promo_temp", event.target.value);
+
+      
+      }
 
     const handleChange = (event)=>{
       setValues({...values, [event.target.name]: event.target.value })
@@ -296,8 +329,11 @@ function AddCard(props){
               <CardExpiryElement   className='inputuser col-5' type='text'  name='expirydate' onChange={e => handleChange(e)}></CardExpiryElement>
               <CardCvcElement   className='inputuser col-5' type='text' placeholder='CVV' name='cvv' onChange={e => handleChange(e)}></CardCvcElement>
             </div> */}
-            
-            
+
+            {/* <div className='titleLabel'>
+              <label>Have a promo code?</label>
+            </div>
+            <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChangePromo(e)}></input> */}
             <button type='submit' onClick={handleSubmit}>Save Card</button>
         </form>
         <ToastContainer />
@@ -315,7 +351,17 @@ const FormContainer = styled.div`
   gap: 0rem;
   align-items: center; //horizontal center
   background-color: #0C1339;
-
+  .titleLabel{
+    flex: 1,
+    justify-content: left;
+    align-items: left;
+    width: 100vw;
+    color: white;
+    label{
+      padding-left: 5px;
+      color: white;
+    }
+  }
   .headingrow{
     padding-top: 1rem;
     
