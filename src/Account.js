@@ -5,6 +5,10 @@ import './App.css';
 import { styled } from 'styled-components';
 import { Alert } from 'bootstrap/dist/js/bootstrap.bundle';
 
+import {ToastContainer, toast} from 'react-toastify';
+// Import toastify css file
+import 'react-toastify/dist/ReactToastify.css';
+
 const AccountSubscription = ({subscription}) => {
   return (
     <section>
@@ -125,9 +129,16 @@ const Account = (props) => {
             console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             
-            navigate("/account", {
-              subscription: data.data.data
-            })
+            // navigate("/account", {
+            //   subscription: data.data.data
+            // })
+            
+            toast.warn(data.data.message, {
+              position: "bottom-right",
+              pauseOnHover: true,
+              autoClose: 8000,
+              theme: "dark"
+            });
         }
         else{
             // toast.error("Error : " + data.data.message)
@@ -178,6 +189,7 @@ const Account = (props) => {
               
 
                 </div>
+
         </div>
       {/*  if monthly plan then show upgrade option here  */}
       {
@@ -187,7 +199,7 @@ const Account = (props) => {
           </div>
         )
       }
-
+    <ToastContainer />
     </Container>
   );
 }

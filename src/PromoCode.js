@@ -99,7 +99,7 @@ function PromoCode(props){
           const params = {userid: user.userid,
             plan: location.state.plan,
             apikey: "kinsal0349",
-            payment_method: location.state.card.stripecardid,
+            payment_method: location.state.card ? location.state.card.stripecardid : null,
             "promo_code": codeid,
           }
           console.log("Params ", params)
