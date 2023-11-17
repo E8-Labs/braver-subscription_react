@@ -177,11 +177,11 @@ const Account = (props) => {
                     <div className='row'>
                         <div className='col-sm-6'>
                             <p className='description text-white'>
-                              <strong>Price:</strong> {user.plan.plan === "Yearly" ? " USD 2000 / year" : "USD 200 / month"}
+                              <strong>Price:</strong> {user.plan.plan === "Yearly" ? " USD $2000 / year" : "USD $200 / month"}
                             </p>
                         </div>
                     </div>
-                    <p className='descriptiontext text-white'>This plan gives you full access to all resources for {user.plan.plan === "Yearly" ? " a year" : " a month"}</p>
+                    <p className='descriptiontext text-white'>This plan gives you full access to all resources on a {user.plan.plan === "Yearly" ? "yearly" : "monthly"} subscription</p>
 
                     <div className='col-auto ms-auto d-flex align-items-center justify-content-end'>
                           <button onClick={cancelSubscription}>Cancel Subscription</button>
