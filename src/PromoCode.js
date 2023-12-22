@@ -18,7 +18,7 @@ let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.RE
 : [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
 
 function PromoCode(props){
-  console.log(promosArray)
+  //console.log(promosArray)
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
     const [codeValid, setCodeValid] = useState(false);
@@ -39,15 +39,15 @@ function PromoCode(props){
   const handleSubmitStripeCardElement = (event) => {
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
-      console.log("Stripe not initialized")
+      //console.log("Stripe not initialized")
       return;
     }
     const card = elements.getElement(CardElement);
-    // console.log(card)
+    // //console.log(card)
     stripeReact.createToken(card).then(function(result) {
       // Handle result.error or result.token
-      console.log("result creating token")
-      console.log(result) //contains a card object as well
+      //console.log("result creating token")
+      //console.log(result) //contains a card object as well
       
     });
   }
@@ -65,7 +65,7 @@ function PromoCode(props){
             }
         }
         if(codeid === null && code !== null){
-            console.log("Invalid promo code")
+            //console.log("Invalid promo code")
             setCodeValid(false)
         }
         else{
@@ -76,37 +76,39 @@ function PromoCode(props){
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
         let codeid = null;
-        if(code !== null){
+        if(code !== null && code !== ""){
             for(let i = 0; i < codes.length; i++){
                 if(codes[i].code === code){
                     codeid = codes[i].id;
                 }
             }
         }
-        if(codeid === null && code !== null){
-            console.log("Invalid promo code")
+        if(codeid === null && (code !== null && code !== "")){
+            //console.log("Invalid promo code")
             toast('Invalid Promo Code', {
               position: toast.POSITION.BOTTOM_CENTER,
               className: 'toast-message'
           })
         }
         else{
-          setCodeValid(true)
-            console.log("User is " + user.userid)
+          if(code !== null && code !== ""){
+            setCodeValid(true)
+          }
+            //console.log("User is " + user.userid)
         
           // process the payment using one of the cards or let user select the card
-          console.log("Payment method added, now process the payment")
+          //console.log("Payment method added, now process the payment")
           const params = {userid: user.userid,
             plan: location.state.plan,
             apikey: "kinsal0349",
             payment_method: location.state.card ? location.state.card.stripecardid : null,
             "promo_code": codeid,
           }
-          console.log("Params ", params)
+          //console.log("Params ", params)
           const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
-            console.log("data loaded")
+            //console.log("data loaded")
             if(data.data.status === "1"){
-                console.log(data.data); // this will have the whole response from the api with status, message and data
+                //console.log(data.data); // this will have the whole response from the api with status, message and data
                 // toast(`User logged in as ${data.data.data.user.name}`);
                 
                 navigate("/account", {
@@ -116,7 +118,7 @@ function PromoCode(props){
             }
             else{
                 // toast.error("Error : " + data.data.message)
-                console.log("Error " + data.data.message)
+                //console.log("Error " + data.data.message)
             }
         }
        
@@ -127,7 +129,7 @@ function PromoCode(props){
     <FormContainer >
       <div className='row headingrow  p-2'>
         <div className='col-2 btn' onClick={() => {
-              console.log("Back button clicked")
+              //console.log("Back button clicked")
               navigate(-1)
             }}>
               <img className='backbtn' src="/backarrow.png"></img>
@@ -135,14 +137,14 @@ function PromoCode(props){
         <div className='col centertitlediv'>
             <p className='text-white text-center fs-6'> Have a Promo Code?</p>
         </div>
-        {/* <div className='col-2 btn' onClick={() => {
-              // console.log("Add Card Button clicked")
-              // addNewCard()
+         <div className='col-2 btn' onClick={() => {
+              
             }}>
-              <button type='submit' onClick={()=> {
-                console.log("Skip here")
+              <button className='continuebtn' type='submit' onClick={()=> {
+                //console.log("Skip here")
+                createSubscription()
               }}>SKIP</button>
-        </div> */}
+        </div> 
         
       </div>
         <form >
@@ -153,8 +155,16 @@ function PromoCode(props){
               <div className='col-1'></div>
             </div>
         </form>
-        <button  onClick={() => {
-                createSubscription()
+        <button className='continuebtn'  onClick={() => {
+                if(code === null || code === ""){
+                  toast('No promo code added', {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                    className: 'toast-message'
+                })
+                }
+                else{
+                  createSubscription()
+                }
             }}>Continue</button>
             <ToastContainer />
     </FormContainer>
@@ -262,7 +272,7 @@ const FormContainer = styled.div`
       background-color: #FFFFFF45;
     }
   }
-  button {
+  .skipbtn {
     background-color: #FFFFFF15;
     color: white;
     padding: 1rem 2rem;

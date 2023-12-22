@@ -128,13 +128,13 @@ function AddCard(props){
     if(myArray.length === 2){
         let m = Number(myArray[0].trim()) || 0;
         let y = Number(myArray[1].trim()) || 0;
-        console.log("Month " + m + " Year " + y)
+        //console.log("Month " + m + " Year " + y)
         return [m, y];
 
     }
     else{
       
-      console.log("Invalid expiry");
+      //console.log("Invalid expiry");
       return null;
     }
   }
@@ -144,16 +144,16 @@ function AddCard(props){
   const handleSubmitStripeCardElement = (event) => {
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
-      console.log("Stripe not initialized")
+      //console.log("Stripe not initialized")
       return;
     }
     const card = elements.getElement(CardElement);
-    console.log("User element card is ")
-    console.log(card)
+    //console.log("User element card is ")
+    //console.log(card)
     stripeReact.createToken(card).then(function(result) {
       // Handle result.error or result.token
-      console.log("result creating token")
-      console.log(result) //contains a card object as well
+      //console.log("result creating token")
+      //console.log(result) //contains a card object as well
       
     });
   }
@@ -168,18 +168,18 @@ function AddCard(props){
       //       }
       //   }
       //   if(localStorage.promo_temp != null && codeid == null){
-      //     console.log("Invalid promo code")
+      //     //console.log("Invalid promo code")
       //     return
       //   }
         // localStorage.setItem("promo_id", codeid);
-      console.log("Callin api");
-      console.log("Stripe Secret Key " + stripeKey);
+      //console.log("Callin api");
+      //console.log("Stripe Secret Key " + stripeKey);
     //   this.props.closePopup()
         event.preventDefault();
         const validation = handleValidation()
         // navigate("/prices")
       if(!validation){
-            console.log("Validation error")
+            //console.log("Validation error")
       }
       else{
 
@@ -187,30 +187,30 @@ function AddCard(props){
         // const card = elements.getElement('card');
         if (!stripe || !elements) {
           // Stripe.js hasn't yet loaded.
-          console.log("Stripe not initialized")
+          //console.log("Stripe not initialized")
           return;
         }
         const card = elements.getElement(CardElement);
         // const nm = elements.getElement('cardNumber');
-        // console.log("Card number ", nm);
+        // //console.log("Card number ", nm);
         // card.update({value: {cardNumber: cardnumber}});
         // card.update({value: {cardExpiry: expirydate}});
         // card.update({value: {cardCvc: cvv}});
-    console.log("User element card is ")
-    console.log(card)
+    //console.log("User element card is ")
+    //console.log(card)
     stripeReact.createToken(card).then( async function(tok) {
       // Handle result.error or result.token
-      console.log("result creating token")
-      console.log(tok) //contains a card object as well
+      //console.log("result creating token")
+      //console.log(tok) //contains a card object as well
       if(tok.token.id){
 
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
-        console.log("User is " + user.userid)
+        //console.log("User is " + user.userid)
         if(user === null){
           return;
         }//cus_JgU9iurcpCxLOx
-        console.log("Token obtained " + tok.id)
+        //console.log("Token obtained " + tok.id)
         const data = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
             cardnumber: "*****",
             cardholdername: "*****",
@@ -221,7 +221,7 @@ function AddCard(props){
             source: tok.token.id
         });
         if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // navigate("/prices")
             // props.oncardAdded()
             // props.closePopup()
@@ -229,8 +229,8 @@ function AddCard(props){
             navigate(-1)
         }
         else{
-            console.log( data.data)
-            console.log("Error " + JSON.stringify(data.data.validation_errors))
+            //console.log( data.data)
+            //console.log("Error " + JSON.stringify(data.data.validation_errors))
             toast.error(data.data.message, {
               position: "bottom-right",
               pauseOnHover: true,
@@ -240,8 +240,8 @@ function AddCard(props){
         }
     }
     else if (tok.error){
-      console.log("Error ")
-      console.log(tok.error)
+      //console.log("Error ")
+      //console.log(tok.error)
       toast.error(tok.error, {
         position: "bottom-right",
         pauseOnHover: true,
@@ -262,8 +262,8 @@ function AddCard(props){
 
     const handleChangePromo = (event)=>{
       //   setValues({...values, [event.target.name]: event.target.value })
-      console.log("Props in add card");
-      console.log(location.state)
+      //console.log("Props in add card");
+      //console.log(location.state)
       localStorage.setItem("promo_temp", event.target.value);
 
       
@@ -293,7 +293,7 @@ function AddCard(props){
     <FormContainer >
       <div className='row headingrow  p-2'>
         <div className='col-2 btn' onClick={() => {
-              console.log("Back button clicked")
+              //console.log("Back button clicked")
               navigate(-1)
             }}>
               <img className='backbtn' src="/backarrow.png"></img>
@@ -302,7 +302,7 @@ function AddCard(props){
             <p className='text-white text-center fs-6'> Add New Card</p>
         </div>
         <div className='col-2 btn' onClick={() => {
-              // console.log("Add Card Button clicked")
+              // //console.log("Add Card Button clicked")
               // addNewCard()
             }}>
               <img className='backbtn' src=""></img>

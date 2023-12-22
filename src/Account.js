@@ -47,50 +47,50 @@ const Account = (props) => {
       const url = `http://braverhospitalityapp.com/braver/api/getuserbyid?userid=${user.userid}&apikey=${process.env.REACT_APP_API_KEY}`
       const data = await axios.get(url)
       if(data.data.status === "1"){
-        console.log(data.data);
+        // //console.log(data.data);
         setUser(data.data.data)
-        console.log("User data obtained from server " + data.data.data.name)
+        // //console.log("User data obtained from server " + data.data.data.name)
         // navigate("/")
       }
       else{
-        console.log( data.data)
-        console.log("Error " + JSON.stringify(data.data.validation_errors))
+        // //console.log( data.data)
+        //console.log("Error " + JSON.stringify(data.data.validation_errors))
       }
-      console.log("Loading User")
+      //console.log("Loading User")
     }
-    console.log("Print User")
+    //console.log("Print User")
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
     loadUserDetails(user)
-    console.log(user)
+    // //console.log(user)
   }, []);
 
   
   const logout = (event)=>{
-    console.log("Logout here")
+    //console.log("Logout here")
   }
 
   const cancelSubscription = async(event) => {
-    console.log("Cancel subscription here")
+    //console.log("Cancel subscription here")
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
-    console.log("User is " + user.userid)
+    //console.log("User is " + user.userid)
     
       // Cancel subscription api call
       const params = {userid: user.userid,
         apikey: "kinsal0349",
       }
-      console.log("Params ", params)
+      //console.log("Params ", params)
 
       try{
         const data = await axios.post("https://braverhospitalityapp.com/braver/api/cancel_subscription", params);
-        console.log("data loaded")
-        console.log(data.data);// this will have the whole response from the api with status, message and data
+        //console.log("data loaded")
+        //console.log(data.data);// this will have the whole response from the api with status, message and data
         // toast(`User logged in as ${data.data.data.user.name}`);
         if(data.data.status === "1"){
-            console.log(data.data.data); 
+            //console.log(data.data.data); 
             
             navigate("/", {
               replace: true,
@@ -99,11 +99,11 @@ const Account = (props) => {
         else{
             // toast.error("Error : " + data.data.message)
             // Alert.alert("Error : ", data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
       }
       catch(error){
-        console.log("Exception ", error)
+        //console.log("Exception ", error)
       }
     
   }
@@ -114,19 +114,19 @@ const Account = (props) => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
-    console.log("User is " + user.userid)
+    //console.log("User is " + user.userid)
     
       // process the payment using one of the cards or let user select the card
-      console.log("Payment method added, now process the payment")
+      //console.log("Payment method added, now process the payment")
       const params = {userid: user.userid,
         plan: process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_YEARLY_PLAN_LIVE : process.env.REACT_APP_6MONTHLY_PLAN,//process.env.REACT_APP_6MONTHLY_PLAN,
         apikey: "kinsal0349",
       }
-      console.log("Params ", params)
+      //console.log("Params ", params)
       const data = await axios.post("https://braverhospitalityapp.com/braver/api/upgrade_subscription", params);
-        console.log("data loaded")
+        //console.log("data loaded")
         if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             
             // navigate("/account", {
@@ -142,7 +142,7 @@ const Account = (props) => {
         }
         else{
             // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
     
   }

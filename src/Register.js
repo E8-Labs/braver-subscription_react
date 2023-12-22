@@ -13,8 +13,8 @@ import axios from 'axios';
 function Register(){
     const navigate = useNavigate();
     const params = useParams();
-    console.log("Params are ")
-    console.log(params.hash)
+    //console.log("Params are ")
+    //console.log(params.hash)
     const [values, setValues] = useState({
        email: "",
        password: "",
@@ -25,8 +25,8 @@ function Register(){
 
 
     const handleSubmit = async (event)=>{
-      console.log("Callin api");
-      console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
+      //console.log("Callin api");
+      //console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
         event.preventDefault();
         const validation = handleValidation()
         // navigate("/prices")
@@ -41,7 +41,7 @@ function Register(){
           apikey: "kinsal0349"
         });
         if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             localStorage.setItem(process.env.REACT_APP_LocalSavedUser, JSON.stringify(data.data.data));
             if(data.data.data.plan.status === "active" || data.data.data.plan.status === "trialing"){
@@ -55,7 +55,7 @@ function Register(){
         }
         else{
             // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
       }
         // alert("form");
@@ -73,7 +73,7 @@ function Register(){
         setAuthenticating(false)
         if(data.data.status === "1"){
           
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             localStorage.setItem(process.env.REACT_APP_LocalSavedUser, JSON.stringify(data.data.data));
             if(data.data.data.plan.status === "active" || data.data.data.plan.status === "trialing"){
@@ -87,7 +87,7 @@ function Register(){
         }
         else{
             // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
     }
 
@@ -101,8 +101,8 @@ function Register(){
     }
 
     useEffect(() => {
-      console.log("Params in UseEffect")
-      console.log(params.hash)
+      //console.log("Params in UseEffect")
+      //console.log(params.hash)
       authUserWithWebAccessCode()
     }, [])
 

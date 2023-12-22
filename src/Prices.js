@@ -32,7 +32,7 @@ let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [{id: pro
 
 const Prices = () => {
   const stripe = Stripe(stripeKey);
-  console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
+  //console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
@@ -49,10 +49,10 @@ const Prices = () => {
 
 
   const loadCards = async ()=>{
-    console.log("User key " + process.env.REACT_APP_LocalSavedUser)
+    //console.log("User key " + process.env.REACT_APP_LocalSavedUser)
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
-        console.log("User is " + user.userid)
+        //console.log("User is " + user.userid)
         setUser(user)
     const url = `https://braverhospitalityapp.com/braver/api/cardlist`
     const data = await axios.post(url, {
@@ -60,16 +60,16 @@ const Prices = () => {
       apikey: "kinsal0349"
     })
     if(data.data.status === "1"){
-      console.log(data.data);
+      //console.log(data.data);
       setCards(data.data.data)
       // navigate("/")
     }
     else{
-      console.log( data.data)
-      console.log("Error " + JSON.stringify(data.data.validation_errors))
+      //console.log( data.data)
+      //console.log("Error " + JSON.stringify(data.data.validation_errors))
     }
-    console.log("Loading Cards")
-    // console.log(res)
+    //console.log("Loading Cards")
+    // //console.log(res)
   }
 
 const closePopup= ()=>{
@@ -77,14 +77,14 @@ const closePopup= ()=>{
 }
   const handlePlanChange = (event)=>{
     const p = event.currentTarget.id
-    console.log("Plan selected " + p)
+    //console.log("Plan selected " + p)
     setPlan(p)
   }
 
   const createSubscription = async (priceId) => {
     // setIsPopupOpen(true)
     setPlan(priceId)
-    console.log("Cards list")
+    //console.log("Cards list")
     //{ state: { message: "Failed to submit form" } }
     navigate("/cards", {state: {
       plan: plan,
@@ -95,23 +95,23 @@ const closePopup= ()=>{
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d)
     setUser(user)
-    console.log("User is " + user.userid)
+    //console.log("User is " + user.userid)
     if(cards.length === 0){
-      console.log("No cards, please add a card")
+      //console.log("No cards, please add a card")
       setIsPopupOpen(true)
       
     }
     else{
       // process the payment using one of the cards or let user select the card
-      console.log("Payment method added, now process the payment")
+      //console.log("Payment method added, now process the payment")
       const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", {
           userid: user.userid,
           plan: plan,
           apikey: "kinsal0349"
         });
-        console.log("data loaded")
+        //console.log("data loaded")
         if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             
             navigate("/account", {
@@ -120,7 +120,7 @@ const closePopup= ()=>{
         }
         else{
             // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
     }
     

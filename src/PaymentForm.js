@@ -27,7 +27,7 @@ const PaymentForm = () => {
     }
 
     let card = elements.getElement("card");
-    console.log("Card", card)
+    //console.log("Card", card)
 
     
   };

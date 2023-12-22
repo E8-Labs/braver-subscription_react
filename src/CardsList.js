@@ -35,10 +35,10 @@ let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.RE
 
 const CardsList = (props) => {
   const stripe = Stripe(process.env.stripeKey);
-  console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
+  //console.log("Using Environment " + process.env.REACT_APP_ENVIRONMENT)
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("Params", location.state) 
+  //console.log("Params", location.state) 
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -51,13 +51,13 @@ const CardsList = (props) => {
   // const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
 
   useEffect(() => {
-    console.log("Props In CardList ", JSON.stringify(location.state.plan))
+    //console.log("Props In CardList ", JSON.stringify(location.state.plan))
     if(localStorage.promo_temp){
-      console.log("Have Temp Promp Code ", localStorage.promo_temp)
-      setPromo(localStorage.promo_temp);
+      //console.log("Have Temp Promp Code ", localStorage.promo_temp)
+      // setPromo(localStorage.promo_temp);
     }
     else {
-      console.log("Nothing in local storage")
+      //console.log("Nothing in local storage")
      }
     loadCards()
     // fetchPrices();
@@ -65,10 +65,10 @@ const CardsList = (props) => {
 
 
   const loadCards = async ()=>{
-    console.log("User key " + process.env.REACT_APP_LocalSavedUser)
+    //console.log("User key " + process.env.REACT_APP_LocalSavedUser)
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
-        console.log("User is " + user.userid)
+        //console.log("User is " + user.userid)
         setUser(user)
     const url = `https://braverhospitalityapp.com/braver/api/cardlist`
     const data = await axios.post(url, {
@@ -76,18 +76,18 @@ const CardsList = (props) => {
       apikey: "kinsal0349"
     })
     if(data.data.status === "1"){
-      console.log(data.data);
+      //console.log(data.data);
       let arr = data.data.data || [];
       arr.push({id: "addcard", stripecardid: ""})
       setCards(arr)
       // navigate("/")
     }
     else{
-      console.log( data.data)
-      console.log("Error " + JSON.stringify(data.data.validation_errors))
+      //console.log( data.data)
+      //console.log("Error " + JSON.stringify(data.data.validation_errors))
     }
-    console.log("Loading Cards")
-    // console.log(res)
+    //console.log("Loading Cards")
+    // //console.log(res)
   }
 
 const closePopup= ()=>{
@@ -99,7 +99,7 @@ function  promoCodeEdited (code) {
 }
   const handlePlanChange = (card)=>{
     setSelectedCard(card)
-    console.log("Card selected ", card)
+    //console.log("Card selected ", card)
   }
 
   const addNewCard = async (priceId) => {
@@ -115,28 +115,28 @@ function  promoCodeEdited (code) {
     const user = JSON.parse(d)
     const codeid = localStorage.promo_id;
     // if(codeid === null && code !== null){
-    //     console.log("Invalid promo code")
+    //     //console.log("Invalid promo code")
     //     toast('Invalid Promo Code', {
     //       position: toast.POSITION.BOTTOM_CENTER,
     //       className: 'toast-message'
     //   })
     // }
     // else{
-        console.log("User is " + user.userid)
+        //console.log("User is " + user.userid)
     
       // process the payment using one of the cards or let user select the card
-      console.log("Payment method added, now process the payment")
+      //console.log("Payment method added, now process the payment")
       const params = {userid: user.userid,
         plan: location.state.plan,
         apikey: "kinsal0349",
         payment_method: selectedCard ? selectedCard.stripecardid : null,
         "promo_code": codeid,
       }
-      console.log("Params ", params)
+      //console.log("Params ", params)
       const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
-        console.log("data loaded")
+        //console.log("data loaded")
         if(data.data.status === "1"){
-            console.log(data.data); // this will have the whole response from the api with status, message and data
+            //console.log(data.data); // this will have the whole response from the api with status, message and data
             // toast(`User logged in as ${data.data.data.user.name}`);
             
             navigate("/account", {
@@ -146,7 +146,7 @@ function  promoCodeEdited (code) {
         }
         else{
             // toast.error("Error : " + data.data.message)
-            console.log("Error " + data.data.message)
+            //console.log("Error " + data.data.message)
         }
     // }
    
@@ -154,7 +154,7 @@ function  promoCodeEdited (code) {
 
   const loadPromoCodeScreen = () => {
     if(cards.length === 1){ // only the button is in the array
-      console.log("No cards, please add a card")
+      //console.log("No cards, please add a card")
       toast.error("No cards added, please add a card first", {
         position: "bottom-right",
         pauseOnHover: true,
@@ -170,7 +170,7 @@ function  promoCodeEdited (code) {
         }})
       }
       else{
-        console.log("Promo is not null so load the payment screen")
+        //console.log("Promo is not null so load the payment screen ", promo)
         createSubscription()
         // take the user to subscription screen
       }
@@ -193,7 +193,7 @@ function  promoCodeEdited (code) {
       {/* heading row */}
       <div className='row headingrow  p-2'>
         <div className='col-2 btn' onClick={() => {
-              console.log("Back button clicked")
+              //console.log("Back button clicked")
               navigate(-1)
             }}>
               <img className='backbtn' src="/backarrow.png"></img>
@@ -203,7 +203,7 @@ function  promoCodeEdited (code) {
         </div>
 
         <div className='col-2 btn' onClick={() => {
-              console.log("Add Card Button clicked")
+              //console.log("Add Card Button clicked")
               addNewCard()
             }}>
               <img className='backbtn' src="/addicon.png"></img>
@@ -237,12 +237,12 @@ function  promoCodeEdited (code) {
                     (
                       <li className='justify-content-center align-items-center'>
                           <button className='col-12'  onClick={() => {
-                            console.log("Make payment here")
+                            //console.log("Make payment here")
                             //New Logic: Take user to promo code
                             loadPromoCodeScreen()
                             // createSubscription()
                           }}>
-                              Continue
+                              Add Promo Code
                           </button>
                       </li>
                     )
@@ -253,7 +253,7 @@ function  promoCodeEdited (code) {
           
               
           {/* <button className='col-12'  onClick={() => {
-                            console.log("Make payment here")
+                            //console.log("Make payment here")
                             //New Logic: Take user to promo code
                             loadPromoCodeScreen()
                             // createSubscription()
