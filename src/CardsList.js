@@ -242,7 +242,7 @@ function  promoCodeEdited (code) {
                             loadPromoCodeScreen()
                             // createSubscription()
                           }}>
-                              Add Promo Code
+                              Next/Add Promo Code
                           </button>
                       </li>
                     )
