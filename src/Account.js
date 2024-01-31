@@ -177,7 +177,7 @@ const Account = (props) => {
                     <div className='row'>
                         <div className='col-sm-6'>
                             <p className='description text-white'>
-                              <strong>Price:</strong> {user.plan.plan === "Yearly" ? " USD $2000 / year" : "USD $200 / month"}
+                              <strong>Price:</strong> {user.plan.plan === "Yearly" ? " USD $5000 / year" : "USD $700 / month"}
                             </p>
                         </div>
                     </div>

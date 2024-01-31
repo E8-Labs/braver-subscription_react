@@ -24,11 +24,11 @@ let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env
 
 
 
-let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [{id: process.env.REACT_APP_MONTHLY_PLAN_LIVE, name: "Monthly Plan", unit_amount: "$199.99/mo", trial: "90 day free trial"},
-{id: process.env.REACT_APP_YEARLY_PLAN_LIVE, name: "Yearly Plan", unit_amount: "$1999.99/yr", trial: "90 day free trial"}] : 
+let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [{id: process.env.REACT_APP_MONTHLY_PLAN_LIVE, name: "Monthly Plan", unit_amount: "$700/mo", trial: "7 day free trial", type: "Monthly"},
+{id: process.env.REACT_APP_YEARLY_PLAN_LIVE, name: "Yearly Plan", unit_amount: "$5000/yr", trial: "7 day free trial", type: "Yearly"}] : 
 
-[{id: process.env.REACT_APP_MONTHLY_PLAN, name: "Monthly Plan", unit_amount: "$199.99/mo", trial: "90 day free trial"},
-  {id: process.env.REACT_APP_6MONTHLY_PLAN, name: "Yearly Plan", unit_amount: "$1999.99/yr", trial: "90 day free trial"}]
+[{id: process.env.REACT_APP_MONTHLY_PLAN, name: "Monthly Plan", unit_amount: "$700/mo", trial: "7 day free trial", type: "Monthly"},
+  {id: process.env.REACT_APP_6MONTHLY_PLAN, name: "Yearly Plan", unit_amount: "$5000/yr", trial: "7 day free trial", type: "Yearly"}]
 
 const Prices = () => {
   const stripe = Stripe(stripeKey);
@@ -39,7 +39,7 @@ const Prices = () => {
   //process.env.REACT_APP_MONTHLY_PLAN
   const [prices, setPrices] = useState(pricesArray);
   const [subscriptionData, setSubscriptionData] = useState(null);
-  const [plan, setPlan] = useState("121h1283hser")
+  const [plan, setPlan] = useState({})
   const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
   const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
 
@@ -77,14 +77,20 @@ const closePopup= ()=>{
 }
   const handlePlanChange = (event)=>{
     const p = event.currentTarget.id
-    //console.log("Plan selected " + p)
-    setPlan(p)
+    console.log("Plan selected " + p)
+    for (var i = 0; i < prices.length; i++){
+      if(prices[i].id === p){
+        setPlan(prices[i])
+        console.log("Price selected is ", prices[i])
+      }
+    }
+    // setPlan(p)
   }
 
   const createSubscription = async (priceId) => {
     // setIsPopupOpen(true)
-    setPlan(priceId)
-    //console.log("Cards list")
+    // setPlan(priceId)
+    console.log("Cards list")
     //{ state: { message: "Failed to submit form" } }
     navigate("/cards", {state: {
       plan: plan,
@@ -154,7 +160,7 @@ const closePopup= ()=>{
           <div className="price-list row">
             {prices.map((price) => {
               return (
-                <div className={price.id == plan ? "price-containerselected " : "price-container "} key={price.id} id={price.id} onClick={handlePlanChange}>
+                <div className={price.id == plan.id ? "price-containerselected " : "price-container "} key={price.id} id={price.id} onClick={handlePlanChange}>
                   <div className='row pe-2'>
                     <h3  className='text-white  col-7'>{price.name}</h3>
                     

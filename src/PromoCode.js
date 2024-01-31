@@ -14,7 +14,17 @@ let envr = process.env.REACT_APP_ENVIRONMENT;
 
 let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY;
 
-let promosArray = envr === "Production" ? [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}, {code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE}] 
+
+
+let LivePromoCodes = [{code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly"}, {code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly"}
+, {code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly"},
+
+{code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly"}, 
+{code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly"}, 
+{code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly"},
+ {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "All"}]
+
+let promosArray = envr === "Production" ? LivePromoCodes
 : [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
 
 function PromoCode(props){
@@ -78,8 +88,18 @@ function PromoCode(props){
         let codeid = null;
         if(code !== null && code !== ""){
             for(let i = 0; i < codes.length; i++){
-                if(codes[i].code === code){
+                if(codes[i].code === code ){
+                  if(codes[i].type === location.state.plan.type){
                     codeid = codes[i].id;
+                  }
+                  else{
+                    console.log("Code is valid but for wrong plan", codes[i].type)
+                    console.log(location.state.plan)
+                  }
+                    
+                }
+                else{
+                  
                 }
             }
         }
@@ -91,7 +111,7 @@ function PromoCode(props){
           })
         }
         else{
-          if(code !== null && code !== ""){
+          if(code !== null && code !== "" ){
             setCodeValid(true)
           }
             //console.log("User is " + user.userid)
@@ -99,7 +119,7 @@ function PromoCode(props){
           // process the payment using one of the cards or let user select the card
           //console.log("Payment method added, now process the payment")
           const params = {userid: user.userid,
-            plan: location.state.plan,
+            plan: location.state.plan.id,
             apikey: "kinsal0349",
             payment_method: location.state.card ? location.state.card.stripecardid : null,
             "promo_code": codeid,
