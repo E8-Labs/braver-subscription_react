@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import './App.css';
 import { styled } from 'styled-components';
@@ -40,16 +40,17 @@ const AccountSubscription = ({subscription}) => {
 const Account = (props) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation()
 
   useEffect(() => {
     const loadUserDetails = async(user) =>{
       
-      const url = `http://braverhospitalityapp.com/braver/api/getuserbyid?userid=${user.userid}&apikey=${process.env.REACT_APP_API_KEY}`
+      const url = `https://braverhospitalityapp.com/braver/api/getuserbyid?userid=${user.userid}&apikey=${process.env.REACT_APP_API_KEY}`
       const data = await axios.get(url)
       if(data.data.status === "1"){
-        // //console.log(data.data);
+        console.log(data.data);
         setUser(data.data.data)
-        // //console.log("User data obtained from server " + data.data.data.name)
+        console.log("User data obtained from server " + data.data)
         // navigate("/")
       }
       else{
@@ -181,7 +182,7 @@ const Account = (props) => {
                             </p>
                         </div>
                     </div>
-                    <p className='descriptiontext text-white'>This plan gives you full access to all resources on a {user.plan.plan === "Yearly" ? "yearly" : "monthly"} subscription</p>
+                    <p className='descriptiontext text-white'>This plan gives you full access to all resources through a {user.plan.plan === "Yearly" ? "yearly" : "monthly"} subscription.</p>
 
                     <div className='col-auto ms-auto d-flex align-items-center justify-content-end'>
                           <button onClick={cancelSubscription}>Cancel Subscription</button>

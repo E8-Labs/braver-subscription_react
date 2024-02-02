@@ -134,6 +134,7 @@ function PromoCode(props){
                 navigate("/account", {
                   subscription: data.data.data,
                   replace: true,
+                  plan: location.state.plan,
                 })
             }
             else{
