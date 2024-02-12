@@ -16,13 +16,13 @@ let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY
 
 
 
-let LivePromoCodes = [{code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly"}, {code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly"}
-, {code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly"},
+let LivePromoCodes = [{code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly", discount: 50}, {code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly", discount: 40}
+, {code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly", discount: 20},
 
-{code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly"}, 
-{code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly"}, 
-{code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly"},
- {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "All"}]
+{code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly", discount: 50}, 
+{code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly", discount: 40}, 
+{code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly", discount: 50},
+ {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "All", discount: 100}]
 
 let promosArray = envr === "Production" ? LivePromoCodes
 : [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
@@ -31,6 +31,7 @@ function PromoCode(props){
   //console.log(promosArray)
     const navigate = useNavigate();
     const [code, setCode] = useState(null)
+    const [amount, setAmount] = useState(0)
     const [codeValid, setCodeValid] = useState(false);
     const [codes, setCodes] = useState(promosArray)
     const location = useLocation()
@@ -65,12 +66,19 @@ function PromoCode(props){
 
     const handleChange = (event)=>{
     //   setValues({...values, [event.target.name]: event.target.value })
+    console.log("Code", event.target.value)
       setCode(event.target.value)
       let codeid = null;
         if(code !== null){
             for(let i = 0; i < codes.length; i++){
-                if(codes[i].code === event.target.value){
+                if(codes[i].code === event.target.value && codes[i].type === location.state.plan.type){
                     codeid = codes[i].id;
+                    let d = codes[i].discount;
+                    let planPrice = location.state.plan.type === "Monthly" ? 700 : 5000
+                    let dPrice = planPrice - (planPrice / 100 * codes[i].discount)
+                    console.log("Discounted Price is ", dPrice)
+                    setAmount(dPrice)
+
                 }
             }
         }
@@ -172,7 +180,7 @@ function PromoCode(props){
             <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChange(e)}></input>
             <div className='row'>
               <div className='col-1'></div>
-              <label className='disclaimer'>{codeValid ? "Total amount: USD 0" : ""}</label>
+              <label className='disclaimer'>{codeValid ? "Total amount: USD " + amount : ""}</label>
               <div className='col-1'></div>
             </div>
         </form>
