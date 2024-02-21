@@ -17,12 +17,13 @@ let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY
 
 
 let LivePromoCodes = [
-  {code: "BraverMonthOff70", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly", discount: 70},
+  {code: "BraverMonthOff70", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH70, type: "Monthly", discount: 70},
   {code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly", discount: 50}, {code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly", discount: 40}, 
   {code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly", discount: 20},
   {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Monthly", discount: 100},
 
-{code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly", discount: 50}, 
+  {code: "BraverYrOff60", id: process.env.REACT_APP_PROMO_BRAVEROFFYR60, type: "Yearly", discount: 60}, 
+  {code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly", discount: 50}, 
 {code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly", discount: 40}, 
 {code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly", discount: 20},
  {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Yearly", discount: 100}
