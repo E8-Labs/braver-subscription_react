@@ -185,7 +185,7 @@ function PromoCode(props){
             <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChange(e)}></input>
             <div className='row'>
               <div className='col-1'></div>
-              <label className='disclaimer'>{codeValid ? "Total amount: USD " + amount : ""}</label>
+              <label className='disclaimer'>{codeValid ? "Total amount: $" + amount : ""}</label>
               <div className='col-1'></div>
             </div>
         </form>
