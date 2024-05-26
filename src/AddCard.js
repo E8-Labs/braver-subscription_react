@@ -191,17 +191,17 @@ function AddCard(props){
           return;
         }
         const card = elements.getElement(CardElement);
-        // const nm = elements.getElement('cardNumber');
-        // //console.log("Card number ", nm);
-        // card.update({value: {cardNumber: cardnumber}});
-        // card.update({value: {cardExpiry: expirydate}});
-        // card.update({value: {cardCvc: cvv}});
-    //console.log("User element card is ")
-    //console.log(card)
+    //     const nm = elements.getElement('cardNumber');
+    //     //console.log("Card number ", nm);
+    //     card.update({value: {cardNumber: cardnumber}});
+    //     card.update({value: {cardExpiry: expirydate}});
+    //     card.update({value: {cardCvc: cvv}});
+    // console.log("User element card is ")
+    // console.log(card)
     stripeReact.createToken(card).then( async function(tok) {
       // Handle result.error or result.token
-      //console.log("result creating token")
-      //console.log(tok) //contains a card object as well
+      console.log("result creating token")
+      console.log(tok) //contains a card object as well
       if(tok.token.id){
 
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);

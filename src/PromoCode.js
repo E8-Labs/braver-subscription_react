@@ -41,6 +41,7 @@ function PromoCode(props){
     const [codes, setCodes] = useState(promosArray)
     const location = useLocation()
     const stripe = Stripe(stripeKey);
+    const [loading, setLoading] = useState(false)
 
     const stripeReact = useStripe();
   const elements = useElements();
@@ -75,7 +76,10 @@ function PromoCode(props){
       setCode(event.target.value)
       let codeid = null;
         if(code !== null){
+         
+          
             for(let i = 0; i < codes.length; i++){
+              console.log(`Matching Plan ${location.state.plan.type} with  Code ${codes[i].code} : ${codes[i].type}`)
                 if(codes[i].code === event.target.value && codes[i].type === location.state.plan.type){
                     codeid = codes[i].id;
                     let d = codes[i].discount;
@@ -88,7 +92,7 @@ function PromoCode(props){
             }
         }
         if(codeid === null && code !== null){
-            //console.log("Invalid promo code")
+            console.log("Invalid promo code")
             setCodeValid(false)
         }
         else{
@@ -138,8 +142,10 @@ function PromoCode(props){
             "promo_code": codeid,
           }
           //console.log("Params ", params)
+          setLoading(true)
           const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
-            //console.log("data loaded")
+            console.log("data loaded")
+            setLoading(false)
             if(data.data.status === "1"){
                 //console.log(data.data); // this will have the whole response from the api with status, message and data
                 // toast(`User logged in as ${data.data.data.user.name}`);
@@ -151,8 +157,8 @@ function PromoCode(props){
                 })
             }
             else{
-                // toast.error("Error : " + data.data.message)
-                //console.log("Error " + data.data.message)
+                toast.error("Error : " + data.data.message)
+                console.log("Error " + data.data.message)
             }
         }
        
@@ -189,17 +195,26 @@ function PromoCode(props){
               <div className='col-1'></div>
             </div>
         </form>
-        <button className='continuebtn'  onClick={() => {
-                if(code === null || code === ""){
-                  toast('No promo code added', {
-                    position: toast.POSITION.BOTTOM_CENTER,
-                    className: 'toast-message'
-                })
-                }
-                else{
-                  createSubscription()
-                }
-            }}>Continue</button>
+        {
+          !loading ? (
+            <button className='continuebtn'  onClick={() => {
+              if(code === null || code === ""){
+                toast('No promo code added', {
+                  position: toast.POSITION.BOTTOM_CENTER,
+                  className: 'toast-message'
+              })
+              }
+              else{
+                createSubscription()
+              }
+          }}>Continue</button>
+          ) : 
+          (
+            <div style={{justifyContent: 'center', alignItems: 'center', width: '100vw', backgroundColor: 'transparent', display: 'flex'}}>
+              <label style={{color: 'white'}}>Subscribing...</label>
+            </div>
+          )
+        }
             <ToastContainer />
     </FormContainer>
     //  </Elements>
