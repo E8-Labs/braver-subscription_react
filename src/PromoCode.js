@@ -100,6 +100,10 @@ function PromoCode(props){
         }
     }
     const createSubscription = async () => {
+      if(loading){
+        toast.error("Please wait a moment..")
+        return
+      }
         const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
         const user = JSON.parse(d)
         let codeid = null;
