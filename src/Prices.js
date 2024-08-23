@@ -27,10 +27,10 @@ let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env
 
 
 let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [
-  { id: "prod_QiHBr2jSZss8tx", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-  { id: "prod_QiHDofMsGseCpW", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
-  { id: "prod_QiHH1m7XVZ9BR5", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-  { id: "prod_QiHHLXv4BWYY6X", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
+  { id: "price_1PqqchC2y2Wr4BecnrBic37s", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+  { id: "price_1PqqerC2y2Wr4BecRTvEsD1u", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
+  { id: "price_1PqqiXC2y2Wr4BecgL2a3LmO", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+  { id: "price_1Pqqj4C2y2Wr4BecXvK55VpD", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
 
   [{ id: "prod_QiS4Hoeiwm2jIJ", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
     { id: "prod_QiS4drXDfvStcU", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },

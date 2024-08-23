@@ -178,11 +178,11 @@ const Account = (props) => {
                     <div className='row'>
                         <div className='col-sm-6'>
                             <p className='description text-white'>
-                              <strong>Price:</strong> {user.plan.plan === "Yearly" ? " USD $5000 / year" : "USD $700 / month"}
+                              <strong>Price:</strong> {`$${user.plan.amount}`}
                             </p>
                         </div>
                     </div>
-                    <p className='descriptiontext text-white'>This plan gives you full access to all resources through a {user.plan.plan === "Yearly" ? "yearly" : "monthly"} subscription.</p>
+                    <p className='descriptiontext text-white'>This plan gives you full access to all resources through a {user.plan.interval} subscription.</p>
 
                     <div className='col-auto ms-auto d-flex align-items-center justify-content-end'>
                           <button onClick={cancelSubscription}>Cancel Subscription</button>
@@ -193,13 +193,13 @@ const Account = (props) => {
 
         </div>
       {/*  if monthly plan then show upgrade option here  */}
-      {
+      {/* {
         user.plan.plan === "Monthly" &&(
           <div className='col-auto my-5 d-flex align-items-center justify-content-center'>
                           <button className='upgradebtn' onClick={upgradeSubscription}>Upgrade</button>
           </div>
         )
-      }
+      } */}
     <ToastContainer />
     </Container>
   );
