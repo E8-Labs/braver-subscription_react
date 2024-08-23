@@ -26,11 +26,17 @@ let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env
 
 
 
-let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [{ id: process.env.REACT_APP_MONTHLY_PLAN_LIVE, name: "Monthly Plan", unit_amount: "$700/mo", trial: "7 day free trial", type: "Monthly" },
-{ id: process.env.REACT_APP_YEARLY_PLAN_LIVE, name: "Yearly Plan", unit_amount: "$5000/yr", trial: "7 day free trial", type: "Yearly" }] :
+let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [
+  { id: "prod_QiHBr2jSZss8tx", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+  { id: "prod_QiHDofMsGseCpW", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
+  { id: "prod_QiHH1m7XVZ9BR5", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+  { id: "prod_QiHHLXv4BWYY6X", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
 
-  [{ id: process.env.REACT_APP_MONTHLY_PLAN, name: "Monthly Plan", unit_amount: "$700/mo", trial: "7 day free trial", type: "Monthly" },
-  { id: process.env.REACT_APP_6MONTHLY_PLAN, name: "Yearly Plan", unit_amount: "$5000/yr", trial: "7 day free trial", type: "Yearly" }]
+  [{ id: "prod_QiS4Hoeiwm2jIJ", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+    { id: "prod_QiS4drXDfvStcU", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
+    { id: "prod_QiS4xvOyoXmhwe", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+    { id: "prod_QiS6PVjRklYkr7", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
+
 
 const Prices = () => {
   const stripe = Stripe(stripeKey);
@@ -44,6 +50,8 @@ const Prices = () => {
   const [plan, setPlan] = useState({})
   const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
   const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
+
+  //toggle monthly and yearly buttons
   const [actMonthly, setActMonthly] = useState(true)
   const [actYearly, setActYearly] = useState(false)
 
@@ -204,9 +212,23 @@ const Prices = () => {
       <div style={{ height: "90%" ,width:'100%',alignItems:'center',justifyContent:'center',marginTop:'3rem'}}>
           {
             actMonthly ? (
-              <MonthlyPlansList />
+              <MonthlyPlansList selectedPlan={plan.identifier}  planSelected={(plan)=> {
+                console.log("Plan selected ", plan)
+                pricesArray.forEach((item) => {
+                  if(item.identifier === plan){
+                    setPlan(item)
+                  }
+                })
+              }}/>
             ) : (
-              <YearlyPlansList />
+              <YearlyPlansList selectedPlan={plan.identifier}  planSelected={(plan)=> {
+                console.log("Plan selected yearly", plan)
+                pricesArray.forEach((item) => {
+                  if(item.identifier === plan){
+                    setPlan(item)
+                  }
+                })
+              }}/>
             )
           }
         </div>

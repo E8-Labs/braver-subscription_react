@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const YearlyPlansList = () => {
+const YearlyPlansList = ({selectedPlan, planSelected}) => {
     const styles = {
         text: (isSelected) => ({
             display: 'flex',
@@ -42,6 +42,19 @@ const YearlyPlansList = () => {
     const [actPrivate, setActPrivate] = useState(false)
     const [actExecutive, setActExecutive] = useState(false)
 
+
+    useEffect(()=>{
+        console.log("Plan changed in yearly ", selectedPlan)
+        if(selectedPlan === "yearly_private"){
+            setActExecutive(false)
+            setActPrivate(true)
+        }
+        else if(selectedPlan === "yearly_executive"){
+            setActExecutive(true)
+            setActPrivate(false)
+        } 
+    }, [selectedPlan])
+
     return (
         <FormContainer>
             <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -49,6 +62,7 @@ const YearlyPlansList = () => {
                     <div className='card-box' onClick={() => {
                         setActPrivate(true)
                         setActExecutive(false)
+                        planSelected("yearly_private")
                     }}>
                         <div style={{ color: actPrivate ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0,fontSize:'4vh' }}>PRIVATE</div>
                         <div style={{
@@ -105,6 +119,7 @@ const YearlyPlansList = () => {
                     <div className='card-box' onClick={() => {
                         setActPrivate(false)
                         setActExecutive(true)
+                        planSelected("yearly_executive")
                     }}>
                         <div style={{ color: actExecutive ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0 ,fontSize:'4vh'}}>EXECUTIVE</div>
                         <div style={{
