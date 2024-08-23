@@ -14,17 +14,17 @@ const YearlyPlansList = () => {
             gap: 10,
             color: isSelected ? '#0B96B4' : 'white',
             marginTop: 10,
-            fontSize: '16px',  // Adjusted font size
+            fontSize: '2vh',  // Adjusted font size
         }),
         price: (isSelected) => ({
             textAlign: 'center',
-            fontSize: '35px',  // Adjusted font size
+            fontSize: '3vh',  // Adjusted font size
             color: isSelected ? '#0B96B4' : 'white',
             fontWeight: 'bold',
         }),
         subtitle: (isSelected) => ({
             textAlign: 'center',
-            fontSize: '18px',  // Adjusted font size
+            fontSize: '2vh',  // Adjusted font size
             color: isSelected ? '#0B96B4' : 'white',
             fontWeight: '400',
         }),
@@ -50,49 +50,53 @@ const YearlyPlansList = () => {
                         setActPrivate(true)
                         setActExecutive(false)
                     }}>
-                        <h1 style={{ color: actPrivate ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0 }}>PRIVATE</h1>
+                        <div style={{ color: actPrivate ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0,fontSize:'4vh' }}>PRIVATE</div>
                         <div style={{
                             borderColor: actPrivate ? "#0B96B4" : 'white', borderWidth: 1, borderStyle: 'solid',
                             padding: 20, borderRadius: 3
                         }}>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 5 }}>
                                 <div style={styles.price(actPrivate)}>
-                                    $1k
+                                    $12k
                                 </div>
                                 <div style={styles.subtitle(actPrivate)}>
-                                    monthy*
+                                    yearly*
                                 </div>
                             </div>
                             <div style={{
                                 flexDirection: 'column', width: '100%', marginTop: 15
                             }}>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Unlimited requests per month</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Unlimited requests per month</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>App + WhatsApp support</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>App + WhatsApp support</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Up to 5 Locations</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Up to 5 Locations</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Restaurants / Nightlife</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Restaurants / Nightlife</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Global Villa + Yacht Rentals</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Global Villa + Yacht Rentals</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Private Jet + First Class Flights</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '16px', }}>Private Jet + First Class Flights</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Exclusive Event Access</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '16px', }}>Exclusive Event Access</div>  {/* Adjusted font size */}
+                                </div>
+                                <div style={{opacity:0,height:35}}>
+                                    <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Exclusive Event Access</div>  {/* Adjusted font size */}
                                 </div>
                             </div>
                         </div>
@@ -102,53 +106,53 @@ const YearlyPlansList = () => {
                         setActPrivate(false)
                         setActExecutive(true)
                     }}>
-                        <h1 style={{ color: actExecutive ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0 }}>EXECUTIVE</h1>
+                        <div style={{ color: actExecutive ? '#0B96B4' : 'white', textAlign: 'center', paddingTop: 0 ,fontSize:'4vh'}}>EXECUTIVE</div>
                         <div style={{
                             borderColor: actExecutive ? "#0B96B4" : 'white', borderWidth: 1, borderStyle: 'solid',
                             padding: 20, borderRadius: 3
                         }}>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 5 }}>
                                 <div style={styles.price(actExecutive)}>
-                                    $4k
+                                    $48k
                                 </div>
                                 <div style={styles.subtitle(actExecutive)}>
-                                    monthy*
+                                    yearly*
                                 </div>
                             </div>
                             <div style={{
                                 flexDirection: 'column', width: '100%', marginTop: 15
                             }}>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Private +</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Private +</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Real-time Support: 24/7/365</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Real-time Support: 24/7/365</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Up to 10 Locations</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Up to 10 Locations</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Executive Retreats / Wellness</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Executive Retreats / Wellness</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px' }}>Private Events/ Music Bookings</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '2vh' }}>Private Events/ Music Bookings</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Exclusive Experiences (Galas)</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '16px', }}>Exclusive Experiences (Galas)</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Private Membership Clubs</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '16px', }}>Private Membership Clubs</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
-                                    <img className='logo' src='/selectedTick.png' alt='tick' height={20} />
-                                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Guests - Spouse +1</div>  {/* Adjusted font size */}
+                                    <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
+                                    <div style={{ fontSize: '16px', }}>Guests - Spouse +1</div>  {/* Adjusted font size */}
                                 </div>
                             </div>
                         </div>
@@ -164,14 +168,14 @@ export default YearlyPlansList
 const FormContainer = styled.div`
     .slider-container {
         width: 90%;  /* Reduced width for smaller screens */
-        max-width: 375px;  /* iPhone SE width */
+        // max-width: 375px;  /* iPhone SE width */
         margin: auto;
         position: relative;
     }
 
     .card-box {
         width: 100%;
-        max-width: 350px;  /* Ensure content fits within the screen */
+        // max-width: 350px;  /* Ensure content fits within the screen */
         margin: auto;
         padding: 15px;
         display: flex;

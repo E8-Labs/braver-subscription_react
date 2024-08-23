@@ -201,7 +201,7 @@ const Prices = () => {
       </div>
 
 
-      <div style={{ height: "90%" ,width:'100%',alignItems:'center',justifyContent:'center'}}>
+      <div style={{ height: "90%" ,width:'100%',alignItems:'center',justifyContent:'center',marginTop:'3rem'}}>
           {
             actMonthly ? (
               <MonthlyPlansList />
@@ -237,7 +237,7 @@ const Prices = () => {
             })} 
       </div> */}
 
-      <button style={{}} className='col-8' onClick={() => createSubscription(plan.id)}>
+      <button style={{marginBottom:20}} className='col-8' onClick={() => createSubscription(plan.id)}>
         Continue
       </button>
 
