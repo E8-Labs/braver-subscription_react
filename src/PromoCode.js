@@ -8,7 +8,7 @@ import axios from 'axios';
 import {ToastContainer, toast} from 'react-toastify';
 // Import toastify css file
 import 'react-toastify/dist/ReactToastify.css';
-import { sha512 } from 'ethers';
+// import { sha512 } from 'ethers';
 // toast.configure()
 let envr = process.env.REACT_APP_ENVIRONMENT;
 
