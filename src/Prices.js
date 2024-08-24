@@ -185,7 +185,7 @@ const Prices = () => {
           <button className='button' style={{ background: 'transparent' }}
             onClick={handlyMonthlyClick}
           >
-            <div style={{ fontSize: actMonthly ? 20 : 16 }} >Monthly</div>
+            <div style={{ fontSize: actMonthly ? 20 : 16,color:actMonthly?'white':'#ffffff80' }} >Monthly</div>
           </button>
           {
             actMonthly && (
@@ -198,7 +198,7 @@ const Prices = () => {
           <button className='button' style={{ background: 'transparent' }}
             onClick={handlyYearlyClick}
           >
-            <div style={{ fontSize: actYearly ? 20 : 16 }}>Yearly</div>
+            <div style={{ fontSize: actYearly ? 20 : 16,color:actYearly?'white':'#ffffff80'  }}>Yearly</div>
           </button>
           {
             actYearly && (

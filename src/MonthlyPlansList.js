@@ -28,6 +28,10 @@ const MonthlyPlansList = ({selectedPlan, planSelected}) => {
             color: isSelected ? '#0B96B4' : 'white',
             fontWeight: '400',
         }),
+        descText:(isSelected) =>({
+            fontSize:'2vh',
+            fontWeight:isSelected?600:400
+        })
     }
 
     const settings = {
@@ -83,36 +87,36 @@ const MonthlyPlansList = ({selectedPlan, planSelected}) => {
                             }}>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Unlimited requests per month</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Unlimited requests per month</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>App + WhatsApp support</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>App + WhatsApp support</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Up to 5 Locations</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Up to 5 Locations</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Restaurants / Nightlife</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Restaurants / Nightlife</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Global Villa + Yacht Rentals</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Global Villa + Yacht Rentals</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Private Jet + First Class Flights</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Private Jet + First Class Flights</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actPrivate)}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Exclusive Event Access</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Exclusive Event Access</div>  {/* Adjusted font size */}
                                 </div>
 
                                 <div style={{opacity:0,height:35}}>
                                     <img className='logo' src={actPrivate?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Exclusive Event Access</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actPrivate)}>Exclusive Event Access</div>  {/* Adjusted font size */}
                                 </div>
                             </div>
                         </div>
@@ -141,35 +145,35 @@ const MonthlyPlansList = ({selectedPlan, planSelected}) => {
                             }}>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Private +</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Private +</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Real-time Support: 24/7/365</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Real-time Support: 24/7/365</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Up to 10 Locations</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Up to 10 Locations</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Executive Retreats / Wellness</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Executive Retreats / Wellness</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh' }}>Private Events/ Music Bookings</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Private Events/ Music Bookings</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Exclusive Experiences (Galas)</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Exclusive Experiences (Galas)</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Private Membership Clubs</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Private Membership Clubs</div>  {/* Adjusted font size */}
                                 </div>
                                 <div style={styles.text(actExecutive)}>
                                     <img className='logo' src={actExecutive?'/selectedTick.png':'/unselectedTick.png'} alt='tick' height={20} />
-                                    <div style={{ fontSize: '2vh', fontWeight: '600' }}>Guests - Spouse +1</div>  {/* Adjusted font size */}
+                                    <div style={styles.descText(actExecutive)}>Guests - Spouse +1</div>  {/* Adjusted font size */}
                                 </div>
                             </div>
                         </div>
