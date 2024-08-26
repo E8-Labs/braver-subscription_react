@@ -27,15 +27,15 @@ let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env
 
 
 let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [
-  { id: "price_1PqqchC2y2Wr4BecnrBic37s", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-  { id: "price_1PqqerC2y2Wr4BecRTvEsD1u", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
-  { id: "price_1PqqiXC2y2Wr4BecgL2a3LmO", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-  { id: "price_1Pqqj4C2y2Wr4BecXvK55VpD", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
+  { id: "price_1PqqchC2y2Wr4BecnrBic37s", name: "Monthly Plan", unit_amount: "$1k", price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+  { id: "price_1PqqerC2y2Wr4BecRTvEsD1u", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
+  { id: "price_1PqqiXC2y2Wr4BecgL2a3LmO", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+  { id: "price_1Pqqj4C2y2Wr4BecXvK55VpD", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
 
-  [{ id: "prod_QiS4Hoeiwm2jIJ", name: "Monthly Plan", unit_amount: "$1k", trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-    { id: "prod_QiS4drXDfvStcU", name: "Monthly Plan", unit_amount: "$4k", trial: "7 day free trial", type: "Yearly", identifier: "monthly_executive"  },
-    { id: "prod_QiS4xvOyoXmhwe", name: "Yearly Plan", unit_amount: "$12k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-    { id: "prod_QiS6PVjRklYkr7", name: "Yearly Plan", unit_amount: "$48k", trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
+  [{ id: "prod_QiS4Hoeiwm2jIJ", name: "Monthly Plan", unit_amount: "$1k" , price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+    { id: "prod_QiS4drXDfvStcU", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
+    { id: "prod_QiS4xvOyoXmhwe", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+    { id: "prod_QiS6PVjRklYkr7", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
 
 
 const Prices = () => {
@@ -100,10 +100,15 @@ const Prices = () => {
   }
 
   const createSubscription = async (priceId) => {
+    console.log('plan is', plan)
+    if(Object.keys(plan).length === 0){
+      return
+    }
     // setIsPopupOpen(true)
     // setPlan(priceId)
     console.log("Cards list")
     //{ state: { message: "Failed to submit form" } }
+
     navigate("/cards", {
       state: {
         plan: plan,
@@ -216,6 +221,7 @@ const Prices = () => {
                 console.log("Plan selected ", plan)
                 pricesArray.forEach((item) => {
                   if(item.identifier === plan){
+                    console.log("Setting plan ", item)
                     setPlan(item)
                   }
                 })

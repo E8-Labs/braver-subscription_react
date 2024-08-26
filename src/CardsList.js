@@ -51,6 +51,7 @@ const CardsList = (props) => {
   // const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
 
   useEffect(() => {
+    console.log("Plan on cards list is ", location.state.plan)
     //console.log("Props In CardList ", JSON.stringify(location.state.plan))
     if(localStorage.promo_temp){
       //console.log("Have Temp Promp Code ", localStorage.promo_temp)
@@ -127,7 +128,7 @@ function  promoCodeEdited (code) {
       // process the payment using one of the cards or let user select the card
       //console.log("Payment method added, now process the payment")
       const params = {userid: user.userid,
-        plan: location.state.plan,
+        plan: location.state.plan.id,
         apikey: "kinsal0349",
         payment_method: selectedCard ? selectedCard.stripecardid : null,
         "promo_code": codeid,

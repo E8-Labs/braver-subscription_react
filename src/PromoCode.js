@@ -1,228 +1,197 @@
-import react, {useState, useEffect} from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import {ElementsConsumer, PaymentElement, 
-  CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
-import Stripe from 'stripe'
 import axios from 'axios';
-import {ToastContainer, toast} from 'react-toastify';
-// Import toastify css file
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { sha512 } from 'ethers';
-// toast.configure()
+
 let envr = process.env.REACT_APP_ENVIRONMENT;
 
-let stripeKey =  envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY;
-
-
+let stripeKey = envr === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY;
 
 let LivePromoCodes = [
-  {code: "BraverMonthOff70", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH70, type: "Monthly", discount: 70},
-  {code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly", discount: 50}, {code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly", discount: 40}, 
-  {code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly", discount: 20},
-  {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Monthly", discount: 100},
-
-  {code: "BraverYrOff60", id: process.env.REACT_APP_PROMO_BRAVEROFFYR60, type: "Yearly", discount: 60}, 
-  {code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly", discount: 50}, 
-{code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly", discount: 40}, 
-{code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly", discount: 20},
- {code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Yearly", discount: 100}
+  { code: "BraverMonthOff70", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH70, type: "Monthly", discount: 70 },
+  { code: "BraverMonthOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH50, type: "Monthly", discount: 50 },
+  { code: "BraverMonthOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH40, type: "Monthly", discount: 40 },
+  { code: "BraverMonthOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFMONTH20, type: "Monthly", discount: 20 },
+  { code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Monthly", discount: 100 },
+  { code: "BraverYrOff60", id: process.env.REACT_APP_PROMO_BRAVEROFFYR60, type: "Yearly", discount: 60 },
+  { code: "BraverYrOff50", id: process.env.REACT_APP_PROMO_BRAVEROFFYR50, type: "Yearly", discount: 50 },
+  { code: "BraverYrOff40", id: process.env.REACT_APP_PROMO_BRAVEROFFYR40, type: "Yearly", discount: 40 },
+  { code: "BraverYrOff20", id: process.env.REACT_APP_PROMO_BRAVEROFFYR20, type: "Yearly", discount: 20 },
+  { code: "BRAVEROFF100", id: process.env.REACT_APP_PROMO_BRAVEROFF100, type: "Yearly", discount: 100 }
 ]
 
-let promosArray = envr === "Production" ? LivePromoCodes
-: [{code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}, {code: "BraverLife", id:process.env.REACT_APP_PROMO_BRAVERLIFE_DEV}, {code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV}]
+let promosArray = envr === "Production" ? LivePromoCodes : [
+  { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
+  { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_DEV },
+  { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV }
+]
 
-function PromoCode(props){
-  //console.log(promosArray)
-    const navigate = useNavigate();
-    const [code, setCode] = useState(null)
-    const [amount, setAmount] = useState(0)
-    const [codeValid, setCodeValid] = useState(false);
-    const [codes, setCodes] = useState(promosArray)
-    const location = useLocation()
-    const stripe = Stripe(stripeKey);
-    const [loading, setLoading] = useState(false)
+function PromoCode(props) {
+  const navigate = useNavigate();
+  const [code, setCode] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [codeValid, setCodeValid] = useState(false);
+  const [codes] = useState(promosArray);
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [validatingCode, setValidatingCode] = useState(false)
+  const [actBtn, setActBtn] = useState(false)
 
-    const stripeReact = useStripe();
-  const elements = useElements();
-    
-  const [values, setValues] = useState({
-    cardnumber: "",
-    cardholdername: "",
-    cvv: "",
-    expirydate: ""
-  })
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (code) {
+        checkPromoCode(code);
+      }
+    }, 500); // 1-second debounce
 
-  const handleSubmitStripeCardElement = (event) => {
-    if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      //console.log("Stripe not initialized")
+    return () => clearTimeout(timer); // Clear the timeout if code changes before 1 second
+  }, [code]);
+
+  const checkPromoCode = async (code) => {
+    if(!code){
+      return
+    }
+    let params = {
+      apikey: "kinsal0349",
+      coupon_code: code
+    };
+    console.log('Trying to validate promo code');
+    setValidatingCode(true)
+
+    try {
+      const response = await axios.post("https://braverhospitalityapp.com/braver/api/validate_coupon", params);
+      console.log('Promo code validation status:', response.data.status);
+      setValidatingCode(false)
+      if (response.data.status == 1) {
+        setError("");
+        handleDiscount(code);
+        // Clear any previous errors
+      } else {
+        setError("Invalid promo code");
+        setCodeValid(false);
+        setAmount(0); // Reset amount on invalid code
+      }
+    } catch (error) {
+      console.error('Error validating promo code:', error);
+      setError("Error validating promo code");
+    }
+  }
+
+  const handleDiscount = (code) => {
+    let codeid = null;
+    let discountAmount = 0;
+    if (code !== null) {
+      for (let i = 0; i < codes.length; i++) {
+        console.log(`Matching Plan ${location.state.plan.type} with Code ${codes[i].code} : ${codes[i].type}`);
+        if (codes[i].code === code && codes[i].type === location.state.plan.type) {
+          codeid = codes[i].id;
+          let d = codes[i].discount;
+          let planPrice = location.state.plan.price;// === "Monthly" ? 700 : 5000;
+          discountAmount = planPrice - (planPrice / 100 * d);
+          console.log("Discounted Price is ", discountAmount);
+          setActBtn(true)
+          setAmount(discountAmount);
+        }
+      }
+    } else {
+      console.log('code is null in handle function')
+    }
+    if (codeid === null) {
+      setCodeValid(false);
+    } else {
+      setCodeValid(true);
+    }
+  }
+
+  const createSubscription = async () => {
+    if(!actBtn){
+      return
+    }
+    if (loading) {
+      toast.error("Please wait a moment...");
       return;
     }
-    const card = elements.getElement(CardElement);
-    // //console.log(card)
-    stripeReact.createToken(card).then(function(result) {
-      // Handle result.error or result.token
-      //console.log("result creating token")
-      //console.log(result) //contains a card object as well
-      
-    });
-  }
-    
-
-    const handleChange = (event)=>{
-    //   setValues({...values, [event.target.name]: event.target.value })
-    console.log("Code", event.target.value)
-      setCode(event.target.value)
-      let codeid = null;
-        if(code !== null){
-         
-          
-            for(let i = 0; i < codes.length; i++){
-              console.log(`Matching Plan ${location.state.plan.type} with  Code ${codes[i].code} : ${codes[i].type}`)
-                if(codes[i].code === event.target.value && codes[i].type === location.state.plan.type){
-                    codeid = codes[i].id;
-                    let d = codes[i].discount;
-                    let planPrice = location.state.plan.type === "Monthly" ? 700 : 5000
-                    let dPrice = planPrice - (planPrice / 100 * codes[i].discount)
-                    console.log("Discounted Price is ", dPrice)
-                    setAmount(dPrice)
-
-                }
-            }
+    const user = JSON.parse(localStorage.getItem(process.env.REACT_APP_LocalSavedUser));
+    let codeid = null;
+    if (code !== "") {
+      for (let i = 0; i < codes.length; i++) {
+        if (codes[i].code === code && codes[i].type === location.state.plan.type) {
+          codeid = codes[i].id;
         }
-        if(codeid === null && code !== null){
-            console.log("Invalid promo code")
-            setCodeValid(false)
-        }
-        else{
-          setCodeValid(true)
-        }
+      }
     }
-    const createSubscription = async () => {
-      if(loading){
-        toast.error("Please wait a moment..")
-        return
+    if (!codeid && code !== "") {
+      toast('Invalid Promo Code', {
+        position: toast.POSITION.BOTTOM_CENTER,
+        className: 'toast-message'
+      });
+    } else {
+      setLoading(true);
+      const params = {
+        userid: user.userid,
+        plan: location.state.plan.id,
+        apikey: "kinsal0349",
+        payment_method: location.state.card ? location.state.card.stripecardid : null,
+        promo_code: codeid,
+      };
+      try {
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
+        setLoading(false);
+        if (data.data.status === "1") {
+          navigate("/account", {
+            subscription: data.data.data,
+            replace: true,
+            plan: location.state.plan,
+          });
+        } else {
+          toast.error("Error: " + data.data.message);
+        }
+      } catch (error) {
+        setLoading(false);
+        toast.error("Error creating subscription");
       }
-        const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-        const user = JSON.parse(d)
-        let codeid = null;
-        if(code !== null && code !== ""){
-            for(let i = 0; i < codes.length; i++){
-                if(codes[i].code === code ){
-                  if(codes[i].type === location.state.plan.type){
-                    codeid = codes[i].id;
-                  }
-                  else{
-                    console.log("Code is valid but for wrong plan", codes[i].type)
-                    console.log(location.state.plan)
-                  }
-                    
-                }
-                else{
-                  
-                }
-            }
-        }
-        if(codeid === null && (code !== null && code !== "")){
-            //console.log("Invalid promo code")
-            toast('Invalid Promo Code', {
-              position: toast.POSITION.BOTTOM_CENTER,
-              className: 'toast-message'
-          })
-        }
-        else{
-          if(code !== null && code !== "" ){
-            setCodeValid(true)
-          }
-            //console.log("User is " + user.userid)
-        
-          // process the payment using one of the cards or let user select the card
-          //console.log("Payment method added, now process the payment")
-          const params = {userid: user.userid,
-            plan: location.state.plan.id,
-            apikey: "kinsal0349",
-            payment_method: location.state.card ? location.state.card.stripecardid : null,
-            "promo_code": codeid,
-          }
-          //console.log("Params ", params)
-          setLoading(true)
-          const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
-            console.log("data loaded")
-            setLoading(false)
-            if(data.data.status === "1"){
-                //console.log(data.data); // this will have the whole response from the api with status, message and data
-                // toast(`User logged in as ${data.data.data.user.name}`);
-                
-                navigate("/account", {
-                  subscription: data.data.data,
-                  replace: true,
-                  plan: location.state.plan,
-                })
-            }
-            else{
-                toast.error("Error : " + data.data.message)
-                console.log("Error " + data.data.message)
-            }
-        }
-       
-      }
+    }
+  }
 
-
-    return(
-    <FormContainer >
-      <div className='row headingrow  p-2'>
-        <div className='col-2 btn' onClick={() => {
-              //console.log("Back button clicked")
-              navigate(-1)
-            }}>
-              <img className='backbtn' src="/backarrow.png"></img>
+  return (
+    <FormContainer>
+      <div className='row headingrow p-2'>
+        <div className='col-2 btn' onClick={() => navigate(-1)}>
+          <img className='backbtn' src="/backarrow.png" alt="Back" />
         </div>
         <div className='col centertitlediv'>
-            <p className='text-white text-center fs-6'> Have a Promo Code?</p>
+          <p className='text-white text-center fs-6'> Have a Promo Code?</p>
         </div>
-         <div className='col-2 btn' onClick={() => {
-              
-            }}>
-              <button className='continuebtn' type='submit' onClick={()=> {
-                //console.log("Skip here")
-                createSubscription()
-              }}>SKIP</button>
-        </div> 
-        
+        <div className='col-2 btn'>
+          <button className='continuebtn' type='submit' onClick={createSubscription}>SKIP</button>
+        </div>
       </div>
-        <form >
-            <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChange(e)}></input>
-            <div className='row'>
-              <div className='col-1'></div>
-              <label className='disclaimer'>{codeValid ? "Total amount: $" + amount : ""}</label>
-              <div className='col-1'></div>
-            </div>
-        </form>
-        {
-          !loading ? (
-            <button className='continuebtn'  onClick={() => {
-              if(code === null || code === ""){
-                toast('No promo code added', {
-                  position: toast.POSITION.BOTTOM_CENTER,
-                  className: 'toast-message'
-              })
-              }
-              else{
-                createSubscription()
-              }
-          }}>Continue</button>
-          ) : 
-          (
-            <div style={{justifyContent: 'center', alignItems: 'center', width: '100vw', backgroundColor: 'transparent', display: 'flex'}}>
-              <label style={{color: 'white'}}>Subscribing...</label>
-            </div>
-          )
-        }
-            <ToastContainer />
+      <form>
+        <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => {
+          setCode(e.target.value)
+          setError("")
+        }} />
+        <div className='row'>
+          <div className='col-1'></div>
+          <label className='disclaimer'>{codeValid ? "Total amount: $" + amount : ""}</label>
+          <label className='disclaimer'>{validatingCode ? "Validating promo code... " : ''}</label>
+          <label className='error'>{error}</label>
+          <div className='col-1'></div>
+        </div>
+      </form>
+      {!loading ? (
+        <button className='continuebtn' onClick={createSubscription}>Continue</button>
+      ) : (
+        <div style={{ justifyContent: 'center', alignItems: 'center', width: '100vw', backgroundColor: 'transparent', display: 'flex' }}>
+          <label style={{ color: 'white' }}>Subscribing...</label>
+        </div>
+      )}
+      <ToastContainer />
     </FormContainer>
-    //  </Elements>
-    );
+  );
 }
 
 const FormContainer = styled.div`
@@ -239,9 +208,12 @@ const FormContainer = styled.div`
     color: white;
     text-align: center;
   }
+  .error{
+    color: red;
+    text-align: center;
+  }
   .headingrow{
     padding-top: 1rem;
-    
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
@@ -249,40 +221,18 @@ const FormContainer = styled.div`
     .btn{
       display: flex;
       flex-direction: row;
-      // background-color: red;
       justify-content: center;
       align-items: center;
     }
     .backbtn{
-      // background-color: black;
       width: 15vw;
     }
     .centertitlediv{
-      // width: 70vw;
       align-items: center;
       justify-content: center;
       background-color: transparent;
     }
   }
-  .innerLabel{
-    background-color: white;
-    height: 40vh;
-
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    img {
-      height: 5rem;
-    }
-    h1 {
-      color: white;
-      text-transform: uppercase;
-    }
-  }
-
   form {
     display: flex;
     flex-direction: column;
@@ -290,7 +240,6 @@ const FormContainer = styled.div`
     align-items: center;
     width: 100vw;
     gap: 2rem;
-    // background-color: red;
     border-radius: 2rem;
     padding: 1rem 1rem;
     .inputuser {
@@ -298,9 +247,7 @@ const FormContainer = styled.div`
       padding: 0.6rem;
       border: none;
       border-bottom: 0.1rem solid white;
-     
       color: white;
-      // width: 100%;
       font-size: 1rem;
       &:focus {
         border-bottom: 0.1rem solid white;
@@ -316,43 +263,13 @@ const FormContainer = styled.div`
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    // width: 5rem;
     cursor: pointer;
     border-radius: 0.9rem;
     font-size: 1rem;
-    // text-transform: uppercase;
     &:hover {
       background-color: #FFFFFF45;
     }
   }
-  .skipbtn {
-    background-color: #FFFFFF15;
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 0.9rem;
-    font-size: 1rem;
-    // text-transform: uppercase;
-    &:hover {
-      background-color: #FFFFFF45;
-    }
-  }
-  span {
-    color: white;
-    text-transform: uppercase;
-    a {
-      color: #4e0eff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  }
-  .skipbtn{
-    color: white;
-    // background-color: red;
-  }
-
   .toast-message {
     background: red;
     color: #fff;
@@ -361,8 +278,7 @@ const FormContainer = styled.div`
     height: 5vh;
     padding: 1rem;
     margin-bottom: 2rem;
-}
+  }
 `;
 
-
-export default PromoCode; 
+export default PromoCode;

@@ -69,7 +69,9 @@ const Account = (props) => {
 
   
   const logout = (event)=>{
-    //console.log("Logout here")
+    console.log("Logout here")
+    localStorage.clear(process.env.REACT_APP_LocalSavedUser)
+    navigate("/register")
   }
 
   const cancelSubscription = async(event) => {
@@ -93,7 +95,7 @@ const Account = (props) => {
         if(data.data.status === "1"){
             //console.log(data.data.data); 
             
-            navigate("/", {
+            navigate("/prices", {
               replace: true,
             })
         }
