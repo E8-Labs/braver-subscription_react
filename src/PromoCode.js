@@ -65,9 +65,10 @@ function PromoCode(props) {
       const response = await axios.post("https://braverhospitalityapp.com/braver/api/validate_coupon", params);
       console.log('Promo code validation status:', response.data.status);
       setValidatingCode(false)
-      if (response.data.status == 1) {
+      if (response.data.status == "1") {
         setError("");
         handleDiscount(code);
+        setCodeValid(true);
         // Clear any previous errors
       } else {
         setError("Invalid promo code");
@@ -75,6 +76,7 @@ function PromoCode(props) {
         setAmount(0); // Reset amount on invalid code
       }
     } catch (error) {
+      setCodeValid(false);
       console.error('Error validating promo code:', error);
       setError("Error validating promo code");
     }
@@ -100,9 +102,9 @@ function PromoCode(props) {
       console.log('code is null in handle function')
     }
     if (codeid === null) {
-      setCodeValid(false);
+      // setCodeValid(false);
     } else {
-      setCodeValid(true);
+      // setCodeValid(true);
     }
   }
 
@@ -123,7 +125,9 @@ function PromoCode(props) {
         }
       }
     }
-    if (!codeid && code !== "") {
+    console.log("Promo code ", code)
+    if((code == null && code == "") || !codeValid){//if(codeid === null && (code !== null && code !== "")){
+    // if (!codeid && code !== "") {
       toast('Invalid Promo Code', {
         position: toast.POSITION.BOTTOM_CENTER,
         className: 'toast-message'
@@ -135,7 +139,7 @@ function PromoCode(props) {
         plan: location.state.plan.id,
         apikey: "kinsal0349",
         payment_method: location.state.card ? location.state.card.stripecardid : null,
-        promo_code: codeid,
+        promo_code: code,
       };
       try {
         const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);

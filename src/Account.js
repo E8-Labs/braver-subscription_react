@@ -183,6 +183,16 @@ const Account = (props) => {
                               <strong>Price:</strong> {`$${user.plan.amount}`}
                             </p>
                         </div>
+                        <div className='col-sm-6'>
+                            <p className='description text-white'>
+                              <strong>Discount Code:</strong> {`${user.plan.coupon_name}`}
+                            </p>
+                        </div>
+                        <div className='col-sm-6'>
+                            <p className='description text-white'>
+                              <strong>Discounted Price:</strong> {`$${user.plan.net_amount}`}
+                            </p>
+                        </div>
                     </div>
                     <p className='descriptiontext text-white'>This plan gives you full access to all resources through a {user.plan.interval} subscription.</p>
 
