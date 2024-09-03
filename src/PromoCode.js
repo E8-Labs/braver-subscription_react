@@ -67,7 +67,7 @@ function PromoCode(props) {
       setValidatingCode(false)
       if (response.data.status == "1") {
         setError("");
-        handleDiscount(code);
+        handleDiscount(response.data.coupon);
         setCodeValid(true);
         // Clear any previous errors
       } else {
@@ -85,27 +85,27 @@ function PromoCode(props) {
   const handleDiscount = (code) => {
     let codeid = null;
     let discountAmount = 0;
-    if (code !== null) {
-      for (let i = 0; i < codes.length; i++) {
-        console.log(`Matching Plan ${location.state.plan.type} with Code ${codes[i].code} : ${codes[i].type}`);
-        if (codes[i].code === code && codes[i].type === location.state.plan.type) {
-          codeid = codes[i].id;
-          let d = codes[i].discount;
-          let planPrice = location.state.plan.price;// === "Monthly" ? 700 : 5000;
-          discountAmount = planPrice - (planPrice / 100 * d);
+    // if (code !== null) {
+    //   for (let i = 0; i < codes.length; i++) {
+    //     console.log(`Matching Plan ${location.state.plan.type} with Code ${codes[i].code} : ${codes[i].type}`);
+    //     if (codes[i].code === code && codes[i].type === location.state.plan.type) {
+    //       codeid = codes[i].id;
+    //       let d = codes[i].discount;
+    //       let planPrice = location.state.plan.price;// === "Monthly" ? 700 : 5000;
+    //       discountAmount = planPrice - (planPrice / 100 * d);
+    //       console.log("Discounted Price is ", discountAmount);
+    //       setActBtn(true)
+    //       setAmount(discountAmount);
+    //     }
+    //   }
+    // } else {
+    //   console.log('code is null in handle function')
+    // }
+    let planPrice = location.state.plan.price;// === "Monthly" ? 700 : 5000;
+          discountAmount = planPrice - (planPrice / 100 * code.percent_off);
           console.log("Discounted Price is ", discountAmount);
           setActBtn(true)
           setAmount(discountAmount);
-        }
-      }
-    } else {
-      console.log('code is null in handle function')
-    }
-    if (codeid === null) {
-      // setCodeValid(false);
-    } else {
-      // setCodeValid(true);
-    }
   }
 
   const createSubscription = async () => {
