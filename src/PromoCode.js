@@ -102,7 +102,12 @@ function PromoCode(props) {
     //   console.log('code is null in handle function')
     // }
     let planPrice = location.state.plan.price;// === "Monthly" ? 700 : 5000;
+    if(code.percent_off){
           discountAmount = planPrice - (planPrice / 100 * code.percent_off);
+    }
+    else if(code.amount_off && code.amount_off < planPrice){
+      discountAmount = planPrice - code.amount_off;
+    }
           console.log("Discounted Price is ", discountAmount);
           setActBtn(true)
           setAmount(discountAmount);
