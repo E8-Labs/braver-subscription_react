@@ -79,7 +79,7 @@ const MonthlyPlansList = ({selectedPlan, planSelected}) => {
                                     $1k
                                 </div>
                                 <div style={styles.subtitle(actPrivate)}>
-                                    monthy*
+                                    monthly*
                                 </div>
                             </div>
                             <div style={{
@@ -137,7 +137,7 @@ const MonthlyPlansList = ({selectedPlan, planSelected}) => {
                                     $4k
                                 </div>
                                 <div style={styles.subtitle(actExecutive)}>
-                                    monthy*
+                                    monthly*
                                 </div>
                             </div>
                             <div style={{
