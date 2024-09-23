@@ -32,10 +32,10 @@ let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [
   { id: "price_1PqqiXC2y2Wr4BecgL2a3LmO", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
   { id: "price_1Pqqj4C2y2Wr4BecXvK55VpD", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
 
-  [{ id: "prod_QiS4Hoeiwm2jIJ", name: "Monthly Plan", unit_amount: "$1k" , price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-    { id: "prod_QiS4drXDfvStcU", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
-    { id: "prod_QiS4xvOyoXmhwe", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-    { id: "prod_QiS6PVjRklYkr7", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
+  [{ id: "price_1Pr19tC2y2Wr4BecpgzE7q1l", name: "Monthly Plan", unit_amount: "$1k" , price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
+    { id: "price_1Pr1AJC2y2Wr4BecS1YqbFuD", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
+    { id: "price_1Pr1AnC2y2Wr4BecpeNsyp7P", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
+    { id: "price_1Pr1BpC2y2Wr4BeceuB4fiuz", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
 
 
 const Prices = () => {
