@@ -109,7 +109,7 @@ function Register(){
     if(authenticating){
       return(
         <div className='row' style={{width: '100vw', height: '100vh', justifyContent: 'center', alignItems: 'center',
-          backgroundColor: '#0C1339'}}>
+          backgroundColor: '#06090F'}}>
           <div className='col-12' style={{height: '30vh', justifyContent: 'center', alignItems: 'center',
           backgroundColor: 'transparent'}}>
             <h2 className='text-white  text-center'>Authenticating...</h2>
@@ -153,7 +153,8 @@ const FormContainer = styled.div`
   justify-content: center; // vertical center
   gap: 1rem;
   align-items: center; //horizontal center
-  background-color: #0C1339;
+  background-color: #06090F;
+  
   
 
   form {
@@ -163,7 +164,7 @@ const FormContainer = styled.div`
     align-items: left;
     gap: 2rem;
     width: 85vw;
-    background-color: #0C1339;
+    background-color: #06090F;
     border-radius: 0rem;
     padding: 0rem 0rem;
     .brand {
@@ -178,7 +179,7 @@ const FormContainer = styled.div`
       }
     }
     .inputuser {
-      background-color: #0C1339;
+      background-color: #06090F;
       padding: 0.6rem;
       border: none;
       border-bottom: 0.1rem solid white;
@@ -202,7 +203,7 @@ const FormContainer = styled.div`
     input:-webkit-autofill:hover, 
     input:-webkit-autofill:focus, 
     input:-webkit-autofill:active{
-      -webkit-box-shadow: 0 0 0 30px #0C1339 inset !important;
+      -webkit-box-shadow: 0 0 0 30px #06090F inset !important;
       -webkit-text-fill-color: white !important;
     }
   }

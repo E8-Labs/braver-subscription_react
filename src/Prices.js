@@ -296,7 +296,7 @@ const FormContainer = styled.div`
     top: 0;
     left: 0;
     z-index: -1;
-    background-color: #0C1339; 
+    background-color: #06090F; 
   }
   .title{
     padding-left: 2rem;

@@ -8,6 +8,7 @@ import Prices from './Prices';
 import Register from './Register';
 import Subscribe from './Subscribe';
 import PaymentForm from './PaymentForm';
+import PendingReview from './PendingReview'
 
 
 // import {ElementsConsumer, PaymentElement, 
@@ -46,6 +47,10 @@ function App(props) {
       </Route>
 
       <Route exact path="/checkout"  element={<PaymentForm />} >
+        
+      </Route>
+
+      <Route exact path="/review"  element={<PendingReview />} >
         
       </Route>
 

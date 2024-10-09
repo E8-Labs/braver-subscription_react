@@ -1,254 +1,268 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios';
-import './App.css';
-import { styled } from 'styled-components';
-import { Alert } from 'bootstrap/dist/js/bootstrap.bundle';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import {ToastContainer, toast} from 'react-toastify';
-// Import toastify css file
-import 'react-toastify/dist/ReactToastify.css';
-
-const AccountSubscription = ({subscription}) => {
-  return (
-    <section>
-      <hr />
-      <h4>
-        <a href={`https://dashboard.stripe.com/test/subscriptions/${subscription.id}`}>
-          {subscription.id}
-        </a>
-      </h4>
-
-      <p>
-        Status: {subscription.status}
-      </p>
-
-      <p>
-        Card last4: {subscription.default_payment_method?.card?.last4}
-      </p>
-
-      <p>
-        Current period end: {(new Date(subscription.current_period_end * 1000).toString())}
-      </p>
-
-      {/* <Link to={{pathname: '/change-plan', state: {subscription: subscription.id }}}>Change plan</Link><br /> */}
-      <Link to={{pathname: '/cancel', state: {subscription: subscription.id }}}>Cancel</Link>
-    </section>
-  )
-}
-
-const Account = (props) => {
+const Account = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation()
 
   useEffect(() => {
-    const loadUserDetails = async(user) =>{
-      
-      const url = `https://braverhospitalityapp.com/braver/api/getuserbyid?userid=${user.userid}&apikey=${process.env.REACT_APP_API_KEY}`
-      const data = await axios.get(url)
-      if(data.data.status === "1"){
-        console.log(data.data);
-        setUser(data.data.data)
-        console.log("User data obtained from server " + data.data)
-        // navigate("/")
+    const loadUserDetails = async (user) => {
+      const url = `https://braverhospitalityapp.com/braver/api/getuserbyid?userid=${user.userid}&apikey=${process.env.REACT_APP_API_KEY}`;
+      const data = await axios.get(url);
+      if (data.data.status === "1") {
+        setUser(data.data.data);
       }
-      else{
-        // //console.log( data.data)
-        //console.log("Error " + JSON.stringify(data.data.validation_errors))
-      }
-      //console.log("Loading User")
-    }
-    //console.log("Print User")
+    };
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
-    setUser(user)
-    loadUserDetails(user)
-    // //console.log(user)
+    const user = JSON.parse(d);
+    setUser(user);
+    loadUserDetails(user);
   }, []);
 
-  
-  const logout = (event)=>{
-    console.log("Logout here")
-    localStorage.clear(process.env.REACT_APP_LocalSavedUser)
-    navigate("/register")
-  }
+  const logout = () => {
+    localStorage.clear(process.env.REACT_APP_LocalSavedUser);
+    navigate("/register");
+  };
 
-  const cancelSubscription = async(event) => {
-    //console.log("Cancel subscription here")
+  const cancelSubscription = async () => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
-    setUser(user)
-    //console.log("User is " + user.userid)
-    
-      // Cancel subscription api call
-      const params = {userid: user.userid,
-        apikey: "kinsal0349",
-      }
-      //console.log("Params ", params)
+    const user = JSON.parse(d);
 
-      try{
-        const data = await axios.post("https://braverhospitalityapp.com/braver/api/cancel_subscription", params);
-        //console.log("data loaded")
-        //console.log(data.data);// this will have the whole response from the api with status, message and data
-        // toast(`User logged in as ${data.data.data.user.name}`);
-        if(data.data.status === "1"){
-            //console.log(data.data.data); 
-            
-            navigate("/prices", {
-              replace: true,
-            })
-        }
-        else{
-            // toast.error("Error : " + data.data.message)
-            // Alert.alert("Error : ", data.data.message)
-            //console.log("Error " + data.data.message)
-        }
+    const params = { userid: user.userid, apikey: "kinsal0349" };
+    try {
+      const data = await axios.post(
+        "https://braverhospitalityapp.com/braver/api/cancel_subscription",
+        params
+      );
+      if (data.data.status === "1") {
+        navigate("/prices", { replace: true });
+      } else {
+        toast.error(data.data.message);
       }
-      catch(error){
-        //console.log("Exception ", error)
-      }
-    
-  }
+    } catch (error) {
+      toast.error("Failed to cancel subscription");
+    }
+  };
 
-
-  //change apis to accept th payment method
   const upgradeSubscription = async () => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
-    setUser(user)
-    //console.log("User is " + user.userid)
-    
-      // process the payment using one of the cards or let user select the card
-      //console.log("Payment method added, now process the payment")
-      const params = {userid: user.userid,
-        plan: process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_YEARLY_PLAN_LIVE : process.env.REACT_APP_6MONTHLY_PLAN,//process.env.REACT_APP_6MONTHLY_PLAN,
-        apikey: "kinsal0349",
-      }
-      //console.log("Params ", params)
-      const data = await axios.post("https://braverhospitalityapp.com/braver/api/upgrade_subscription", params);
-        //console.log("data loaded")
-        if(data.data.status === "1"){
-            //console.log(data.data); // this will have the whole response from the api with status, message and data
-            // toast(`User logged in as ${data.data.data.user.name}`);
-            
-            // navigate("/account", {
-            //   subscription: data.data.data
-            // })
-            
-            toast.warn(data.data.message, {
-              position: "bottom-right",
-              pauseOnHover: true,
-              autoClose: 8000,
-              theme: "dark"
-            });
-        }
-        else{
-            // toast.error("Error : " + data.data.message)
-            //console.log("Error " + data.data.message)
-        }
-    
-  }
+    const user = JSON.parse(d);
 
+    const params = {
+      userid: user.userid,
+      plan:
+        process.env.REACT_APP_ENVIRONMENT === "Production"
+          ? process.env.REACT_APP_YEARLY_PLAN_LIVE
+          : process.env.REACT_APP_6MONTHLY_PLAN,
+      apikey: "kinsal0349",
+    };
 
-  if(user === null){
-    return (
-      <div>
+    const data = await axios.post(
+      "https://braverhospitalityapp.com/braver/api/upgrade_subscription",
+      params
+    );
 
-      </div>
-    )
+    if (data.data.status === "1") {
+      toast.success("Subscription upgraded successfully!", {
+        position: "bottom-right",
+        autoClose: 8000,
+      });
+    } else {
+      toast.error(data.data.message);
+    }
+  };
+
+  if (user === null) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <Container className='container-fluid bg-image '>
-        <div className='row titlerow'>
-          <div className='col'>
-            <h1 className='text-white'>Welcome! {user.name}</h1>
+    <StyledContainer>
+      <div className="header">
+        <h1>Welcome, {user.name}</h1>
+        <button className="logout-btn" onClick={logout}>
+          Logout
+        </button>
+      </div>
+
+      <div className="content">
+        <h2>Active Plan</h2>
+        <div className="plan-details">
+          <div className="plan-header">
+            <h3>{user.plan.plan} Plan</h3>
+            <p className={`status ${user.plan.status}`}>
+              {user.plan.status === "active" ? "Active" : "Trial"}
+            </p>
           </div>
-          <div className='col-auto ms-auto'>
-            <button onClick={logout}>Logout</button>
+
+          <div className="plan-info">
+            <p>
+              <strong>Price:</strong> ${user.plan.amount}
+            </p>
+            <p>
+              <strong>Discount Code:</strong> {user.plan.coupon_name}
+            </p>
+            <p>
+              <strong>Discounted Price:</strong> ${user.plan.net_amount}
+            </p>
+            <p>
+              <strong>Billing Cycle:</strong> {user.plan.interval}
+            </p>
+          </div>
+
+          <p>
+            This plan gives you full access to all resources through a{" "}
+            {user.plan.interval} subscription.
+          </p>
+          <div className="actions">
+            <button className="cancel-btn" onClick={cancelSubscription}>
+              Cancel Subscription
+            </button>
+            {user.plan.plan === "Monthly" && (
+              <button className="upgrade-btn" onClick={upgradeSubscription}>
+                Upgrade
+              </button>
+            )}
           </div>
         </div>
-        <div className='row secondrow justify-content-center mt-5'>
-              <div className='col-12 d-flex justify-content-center align-items-center'>
-                  <h3 className='text-white'>Active plan</h3>
-              </div>
-                <div className="price-container col-md-4 mt-5" >
-                    <h3  className='text-white'>{user.plan.plan} Plan</h3>
-                    <p className='text-white fs-6 description' ><strong>Status:</strong> {user.plan.status === "active" ? "Active" : "Trial"}</p>
-                  
-                    <div className='row'>
-                        <div className='col-sm-6'>
-                            <p className='description text-white'>
-                              <strong>Price:</strong> {`$${user.plan.amount}`}
-                            </p>
-                        </div>
-                        <div className='col-sm-6'>
-                            <p className='description text-white'>
-                              <strong>Discount Code:</strong> {`${user.plan.coupon_name}`}
-                            </p>
-                        </div>
-                        <div className='col-sm-6'>
-                            <p className='description text-white'>
-                              <strong>Discounted Price:</strong> {`$${user.plan.net_amount}`}
-                            </p>
-                        </div>
-                    </div>
-                    <p className='descriptiontext text-white'>This plan gives you full access to all resources through a {user.plan.interval} subscription.</p>
+      </div>
 
-                    <div className='col-auto ms-auto d-flex align-items-center justify-content-end'>
-                          <button onClick={cancelSubscription}>Cancel Subscription</button>
-                    </div>
-              
-
-                </div>
-
-        </div>
-      {/*  if monthly plan then show upgrade option here  */}
-      {/* {
-        user.plan.plan === "Monthly" &&(
-          <div className='col-auto my-5 d-flex align-items-center justify-content-center'>
-                          <button className='upgradebtn' onClick={upgradeSubscription}>Upgrade</button>
-          </div>
-        )
-      } */}
-    <ToastContainer />
-    </Container>
+      <ToastContainer />
+    </StyledContainer>
   );
-}
+};
 
-const Container = styled.div`
-width: 100vw;
-height: 100vh;
-padding: 1rem;
-.titlerow{
-  background-color: transparent;
-  height: 3rem;
-}
-.secondrow{
-  .status{
-    font-size: 2rem;
-    font-weight: bold;
-  }
-}
-.upgradebtn{
-  background-color: transparent;
-  font-weight: bold;
-  font-size: 1.5rem;
-}
+const StyledContainer = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background: #06090f; /* Updated background color */
+  padding: 2rem;
 
-.price-container{
-  // z-index: 1;
-  // width: 15rem;
-  border: white solid 0.1rem;
-  // border-width: 1rem;
-  padding: 1rem;
-  border-radius: 0.3rem;
-  .descriptiontext{
-    font-size: 12;
-    color: white;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #333;
+    color: #fff;
+
+    h1 {
+      font-size: 1.4rem; /* Reduced size to keep on one line */
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .logout-btn {
+      background: #ff5c5c;
+      color: #fff;
+      padding: 0.5rem 1.2rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #ff3333;
+      }
+    }
   }
-}
+
+  .content {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .plan-details {
+      padding: 1.5rem;
+      background: #f9f9f9;
+      border-radius: 8px;
+
+      .plan-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 {
+          font-size: 1.4rem;
+        }
+
+        .status {
+          font-size: 1rem;
+          font-weight: 600;
+          padding: 0.3rem 0.6rem;
+          border-radius: 4px;
+
+          &.active {
+            color: #28a745;
+          }
+
+          &.trial {
+            color: #ffc107;
+          }
+        }
+      }
+
+      .plan-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        p {
+          font-size: 1rem;
+          margin: 0;
+        }
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1rem;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+
+        .cancel-btn,
+        .upgrade-btn {
+          background: #ff5c5c;
+          color: #fff;
+          padding: 0.6rem 1.2rem;
+          border: none;
+          cursor: pointer;
+          border-radius: 5px;
+          transition: background 0.3s ease;
+
+          &:hover {
+            background: #ff3333;
+          }
+        }
+
+        .upgrade-btn {
+          background: #28a745;
+
+          &:hover {
+            background: #218838;
+          }
+        }
+      }
+    }
+  }
 `;
 
 export default Account;

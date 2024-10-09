@@ -117,52 +117,89 @@ function PromoCode(props) {
     if(!actBtn){
       return
     }
+
+
+
+    
     if (loading) {
       toast.error("Please wait a moment...");
       return;
     }
     const user = JSON.parse(localStorage.getItem(process.env.REACT_APP_LocalSavedUser));
-    let codeid = null;
-    if (code !== "") {
-      for (let i = 0; i < codes.length; i++) {
-        if (codes[i].code === code && codes[i].type === location.state.plan.type) {
-          codeid = codes[i].id;
-        }
-      }
-    }
-    console.log("Promo code ", code)
-    if((code == null && code == "") || !codeValid){//if(codeid === null && (code !== null && code !== "")){
-    // if (!codeid && code !== "") {
-      toast('Invalid Promo Code', {
-        position: toast.POSITION.BOTTOM_CENTER,
-        className: 'toast-message'
-      });
-    } else {
-      setLoading(true);
+    console.log("User is ", user)
+    if(user.accountstatus == "Pending"){
+      //call the update api
       const params = {
         userid: user.userid,
-        plan: location.state.plan.id,
+        subscription_plan: location.state.plan.id,
         apikey: "kinsal0349",
-        payment_method: location.state.card ? location.state.card.stripecardid : null,
         promo_code: code,
       };
       try {
-        const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
+        const data = await axios.post("https://braverhospitalityapp.com/braver/api/updateuser", params);
         setLoading(false);
         if (data.data.status === "1") {
-          navigate("/account", {
-            subscription: data.data.data,
-            replace: true,
-            plan: location.state.plan,
-          });
+          // navigate("/account", {
+          //   subscription: data.data.data,
+          //   replace: true,
+          //   plan: location.state.plan,
+          // });
+          //take the user back to the app
+          navigate("/review")
+
         } else {
           toast.error("Error: " + data.data.message);
         }
       } catch (error) {
         setLoading(false);
-        toast.error("Error creating subscription");
+        toast.error("Error setting up payment");
       }
     }
+    else{
+      console.log("Promo code ", code)
+      if((code == null && code == "") || !codeValid){//if(codeid === null && (code !== null && code !== "")){
+      // if (!codeid && code !== "") {
+        toast('Invalid Promo Code', {
+          position: toast.POSITION.BOTTOM_CENTER,
+          className: 'toast-message'
+        });
+      } else {
+        setLoading(true);
+        const params = {
+          userid: user.userid,
+          plan: location.state.plan.id,
+          apikey: "kinsal0349",
+          payment_method: location.state.card ? location.state.card.stripecardid : null,
+          promo_code: code,
+        };
+        try {
+          const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", params);
+          setLoading(false);
+          if (data.data.status === "1") {
+            navigate("/account", {
+              subscription: data.data.data,
+              replace: true,
+              plan: location.state.plan,
+            });
+          } else {
+            toast.error("Error: " + data.data.message);
+          }
+        } catch (error) {
+          setLoading(false);
+          toast.error("Error creating subscription");
+        }
+      }
+    }
+    // return
+    // let codeid = null;
+    // if (code !== "") {
+    //   for (let i = 0; i < codes.length; i++) {
+    //     if (codes[i].code === code && codes[i].type === location.state.plan.type) {
+    //       codeid = codes[i].id;
+    //     }
+    //   }
+    // }
+    
   }
 
   return (
@@ -211,7 +248,7 @@ const FormContainer = styled.div`
   justify-content: top; // vertical center
   gap: 0rem;
   align-items: center; //horizontal center
-  background-color: #0C1339;
+  background-color: #06090F;
 
   .disclaimer{
     color: white;
@@ -252,7 +289,7 @@ const FormContainer = styled.div`
     border-radius: 2rem;
     padding: 1rem 1rem;
     .inputuser {
-      background-color: #0C1339;
+      background-color: #06090F;
       padding: 0.6rem;
       border: none;
       border-bottom: 0.1rem solid white;

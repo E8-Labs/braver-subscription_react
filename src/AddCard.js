@@ -350,7 +350,7 @@ const FormContainer = styled.div`
   justify-content: top; // vertical center
   gap: 0rem;
   align-items: center; //horizontal center
-  background-color: #0C1339;
+  background-color: #06090F;
   .titleLabel{
     flex: 1,
     justify-content: left;
@@ -417,7 +417,7 @@ const FormContainer = styled.div`
     border-radius: 2rem;
     padding: 1rem 1rem;
     .inputuser {
-      background-color: #0C1339;
+      background-color: #06090F;
       padding: 0.6rem;
       border: none;
       border-bottom: 0.1rem solid white;

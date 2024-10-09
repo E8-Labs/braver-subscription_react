@@ -277,7 +277,7 @@ height: 100vh;
   justify-content: top; // vertical center if column and horizontal if row
   gap: 1rem;
   align-items: center; //horizontal center
-  background-color: #0C1339;
+  background-color: #06090F;
 .headingrow{
   padding-top: 1rem;
   
