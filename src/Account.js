@@ -151,13 +151,13 @@ const StyledContainer = styled.div`
     color: #fff;
 
     h1 {
-      font-size: 1.4rem; /* Reduced size to keep on one line */
+      font-size: 1.2rem; /* Reduced size to keep on one line */
       font-weight: 600;
       margin: 0;
     }
 
     .logout-btn {
-      background: #ff5c5c;
+      background: #06090f;
       color: #fff;
       padding: 0.5rem 1.2rem;
       border: none;
@@ -180,7 +180,7 @@ const StyledContainer = styled.div`
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
     h2 {
-      font-size: 1.6rem;
+      font-size: 1.3rem;
       font-weight: 500;
       margin-bottom: 1rem;
     }
@@ -240,7 +240,7 @@ const StyledContainer = styled.div`
 
         .cancel-btn,
         .upgrade-btn {
-          background: #ff5c5c;
+          background: #06090f;
           color: #fff;
           padding: 0.6rem 1.2rem;
           border: none;

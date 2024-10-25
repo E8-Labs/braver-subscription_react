@@ -1,42 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import React, { useState, useEffect } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
+import { useNavigate, withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import styled from "styled-components";
+import Subscribe from "./Subscribe";
 
-import { useNavigate, withRouter } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
-import styled from 'styled-components'
-import Subscribe from './Subscribe';
+import ReactModal from "react-modal";
+import AddCard from "./AddCard";
 
-
-import ReactModal from 'react-modal';
-import AddCard from './AddCard';
-
-import axios from 'axios';
-import Stripe from 'stripe'
-import MonthlyPlansList from './MonthlyPlansList';
-import YearlyPlansList from './YearlyPlansList';
-
+import axios from "axios";
+import Stripe from "stripe";
+import MonthlyPlansList from "./MonthlyPlansList";
+import YearlyPlansList from "./YearlyPlansList";
 
 // import {Logo} from './braver logo.png'
 
 // const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-let stripeKey = process.env.REACT_APP_ENVIRONMENT === "Production" ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE : process.env.REACT_APP_STRIPE_SECRET_KEY
+let stripeKey =
+  process.env.REACT_APP_ENVIRONMENT === "Production"
+    ? process.env.REACT_APP_STRIPE_SECRET_KEY_LIVE
+    : process.env.REACT_APP_STRIPE_SECRET_KEY;
 
-
-
-let pricesArray = process.env.REACT_APP_ENVIRONMENT === "Production" ? [
-  { id: "price_1PqqchC2y2Wr4BecnrBic37s", name: "Monthly Plan", unit_amount: "$1k", price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-  { id: "price_1PqqerC2y2Wr4BecRTvEsD1u", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
-  { id: "price_1PqqiXC2y2Wr4BecgL2a3LmO", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-  { id: "price_1Pqqj4C2y2Wr4BecXvK55VpD", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }] :
-
-  [{ id: "price_1Pr19tC2y2Wr4BecpgzE7q1l", name: "Monthly Plan", unit_amount: "$1k" , price: 1000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_private" },
-    { id: "price_1Pr1AJC2y2Wr4BecS1YqbFuD", name: "Monthly Plan", unit_amount: "$4k", price: 4000, trial: "7 day free trial", type: "Monthly", identifier: "monthly_executive"  },
-    { id: "price_1Pr1AnC2y2Wr4BecpeNsyp7P", name: "Yearly Plan", unit_amount: "$12k", price: 12000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_private" },
-    { id: "price_1Pr1BpC2y2Wr4BeceuB4fiuz", name: "Yearly Plan", unit_amount: "$48k", price: 48000, trial: "7 day free trial", type: "Yearly", identifier: "yearly_executive"  }]
-
+let pricesArray =
+  process.env.REACT_APP_ENVIRONMENT === "Production"
+    ? [
+        {
+          id: "price_1PqqchC2y2Wr4BecnrBic37s",
+          name: "Monthly Plan",
+          unit_amount: "$1k",
+          price: 1000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_private",
+        },
+        {
+          id: "price_1PqqerC2y2Wr4BecRTvEsD1u",
+          name: "Monthly Plan",
+          unit_amount: "$4k",
+          price: 4000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_executive",
+        },
+        {
+          id: "price_1PqqiXC2y2Wr4BecgL2a3LmO",
+          name: "Yearly Plan",
+          unit_amount: "$12k",
+          price: 12000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_private",
+        },
+        {
+          id: "price_1Pqqj4C2y2Wr4BecXvK55VpD",
+          name: "Yearly Plan",
+          unit_amount: "$48k",
+          price: 48000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_executive",
+        },
+      ]
+    : [
+        {
+          id: "price_1Pr19tC2y2Wr4BecpgzE7q1l",
+          name: "Monthly Plan",
+          unit_amount: "$1k",
+          price: 1000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_private",
+        },
+        {
+          id: "price_1Pr1AJC2y2Wr4BecS1YqbFuD",
+          name: "Monthly Plan",
+          unit_amount: "$4k",
+          price: 4000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_executive",
+        },
+        {
+          id: "price_1Pr1AnC2y2Wr4BecpeNsyp7P",
+          name: "Yearly Plan",
+          unit_amount: "$12k",
+          price: 12000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_private",
+        },
+        {
+          id: "price_1Pr1BpC2y2Wr4BeceuB4fiuz",
+          name: "Yearly Plan",
+          unit_amount: "$48k",
+          price: 48000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_executive",
+        },
+      ];
 
 const Prices = () => {
   const stripe = Stripe(stripeKey);
@@ -47,114 +112,107 @@ const Prices = () => {
   //process.env.REACT_APP_MONTHLY_PLAN
   const [prices, setPrices] = useState(pricesArray);
   const [subscriptionData, setSubscriptionData] = useState(null);
-  const [plan, setPlan] = useState({})
+  const [plan, setPlan] = useState({});
   const [isAddCardPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectPaymentMethod, setSelectPaymentMethod] = useState(false) // If true? show payment methods screen
+  const [selectPaymentMethod, setSelectPaymentMethod] = useState(false); // If true? show payment methods screen
 
   //toggle monthly and yearly buttons
-  const [actMonthly, setActMonthly] = useState(true)
-  const [actYearly, setActYearly] = useState(false)
+  const [actMonthly, setActMonthly] = useState(true);
+  const [actYearly, setActYearly] = useState(false);
 
-  useEffect(() => {
-
-  }, [])
-
+  useEffect(() => {}, []);
 
   const loadCards = async () => {
     //console.log("User key " + process.env.REACT_APP_LocalSavedUser)
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
+    const user = JSON.parse(d);
     //console.log("User is " + user.userid)
-    setUser(user)
-    const url = `https://braverhospitalityapp.com/braver/api/cardlist`
+    setUser(user);
+    const url = `https://braverhospitalityapp.com/braver/api/cardlist`;
     const data = await axios.post(url, {
       userid: user.userid,
-      apikey: "kinsal0349"
-    })
+      apikey: "kinsal0349",
+    });
     if (data.data.status === "1") {
       //console.log(data.data);
-      setCards(data.data.data)
+      setCards(data.data.data);
       // navigate("/")
-    }
-    else {
+    } else {
       //console.log( data.data)
       //console.log("Error " + JSON.stringify(data.data.validation_errors))
     }
     //console.log("Loading Cards")
     // //console.log(res)
-  }
+  };
 
   const closePopup = () => {
-    setIsPopupOpen(false)
-  }
+    setIsPopupOpen(false);
+  };
   const handlePlanChange = (event) => {
-    const p = event.currentTarget.id
-    console.log("Plan selected " + p)
+    const p = event.currentTarget.id;
+    console.log("Plan selected " + p);
     for (var i = 0; i < prices.length; i++) {
       if (prices[i].id === p) {
-        setPlan(prices[i])
-        console.log("Price selected is ", prices[i])
+        setPlan(prices[i]);
+        console.log("Price selected is ", prices[i]);
       }
     }
     // setPlan(p)
-  }
+  };
 
   const createSubscription = async (priceId) => {
-    console.log('plan is', plan)
-    if(Object.keys(plan).length === 0){
-      return
+    console.log("plan is", plan);
+    if (Object.keys(plan).length === 0) {
+      return;
     }
     // setIsPopupOpen(true)
     // setPlan(priceId)
-    console.log("Cards list")
+    console.log("Cards list");
     //{ state: { message: "Failed to submit form" } }
 
     navigate("/cards", {
       state: {
         plan: plan,
         cards: cards,
-      }
-    })
-  }
+      },
+    });
+  };
   const createSubscription2 = async (priceId) => {
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-    const user = JSON.parse(d)
-    setUser(user)
+    const user = JSON.parse(d);
+    setUser(user);
     //console.log("User is " + user.userid)
     if (cards.length === 0) {
       //console.log("No cards, please add a card")
-      setIsPopupOpen(true)
-
-    }
-    else {
+      setIsPopupOpen(true);
+    } else {
       // process the payment using one of the cards or let user select the card
       //console.log("Payment method added, now process the payment")
-      const data = await axios.post("https://braverhospitalityapp.com/braver/api/create_subscription", {
-        userid: user.userid,
-        plan: plan,
-        apikey: "kinsal0349"
-      });
+      const data = await axios.post(
+        "https://braverhospitalityapp.com/braver/api/create_subscription",
+        {
+          userid: user.userid,
+          plan: plan,
+          apikey: "kinsal0349",
+        }
+      );
       //console.log("data loaded")
       if (data.data.status === "1") {
         //console.log(data.data); // this will have the whole response from the api with status, message and data
         // toast(`User logged in as ${data.data.data.user.name}`);
 
         navigate("/account", {
-          subscription: data.data.data
-        })
-      }
-      else {
+          subscription: data.data.data,
+        });
+      } else {
         // toast.error("Error : " + data.data.message)
         //console.log("Error " + data.data.message)
       }
     }
-
-  }
-
-
+  };
 
   if (subscriptionData) {
-    return <Subscribe state={subscriptionData} />
+    return <Subscribe state={subscriptionData} />;
   }
 
   // if(user !== null && user.is_premium === true){
@@ -166,79 +224,101 @@ const Prices = () => {
   //   )
   // }
 
-
   const handlyMonthlyClick = () => {
-    setActMonthly(true)
-    setActYearly(false)
-  }
+    setActMonthly(true);
+    setActYearly(false);
+  };
 
   const handlyYearlyClick = () => {
-    setActMonthly(false)
-    setActYearly(true)
-  }
+    setActMonthly(false);
+    setActYearly(true);
+  };
 
   return (
-    <FormContainer className='bg-image'>
-
-      <div className='transparent-bg'>
-      </div>
+    <FormContainer className="bg-image">
+      <div className="transparent-bg"></div>
       {/* <div className=''> */}
-      <img className='logo' src='/braverlogo.png' alt='Braver Logo' background='red' height={50}></img>
-      <div className='bar-container'>
-
-        <div className='button-container'>
-          <button className='button' style={{ background: 'transparent' }}
+      <img
+        className="logo"
+        src="/bravernew.png"
+        alt="Braver"
+        background="red"
+        height={50}
+      ></img>
+      <div className="bar-container">
+        <div className="button-container">
+          <button
+            className="button"
+            style={{ background: "transparent" }}
             onClick={handlyMonthlyClick}
           >
-            <div style={{ fontSize: actMonthly ? 20 : 16,color:actMonthly?'white':'#ffffff80' }} >Monthly</div>
+            <div
+              style={{
+                fontSize: actMonthly ? 20 : 16,
+                color: actMonthly ? "white" : "#ffffff80",
+              }}
+            >
+              Monthly
+            </div>
           </button>
-          {
-            actMonthly && (
-              <div className='button-bar'></div>
-            )
-          }
+          {actMonthly && <div className="button-bar"></div>}
         </div>
 
-        <div className='button-container'>
-          <button className='button' style={{ background: 'transparent' }}
+        <div className="button-container">
+          <button
+            className="button"
+            style={{ background: "transparent" }}
             onClick={handlyYearlyClick}
           >
-            <div style={{ fontSize: actYearly ? 20 : 16,color:actYearly?'white':'#ffffff80'  }}>Yearly</div>
+            <div
+              style={{
+                fontSize: actYearly ? 20 : 16,
+                color: actYearly ? "white" : "#ffffff80",
+              }}
+            >
+              Yearly
+            </div>
           </button>
-          {
-            actYearly && (
-              <div className='button-bar'></div>
-            )
-          }
+          {actYearly && <div className="button-bar"></div>}
         </div>
       </div>
 
-
-      <div style={{ height: "90%" ,width:'100%',alignItems:'center',justifyContent:'center',marginTop:'3rem'}}>
-          {
-            actMonthly ? (
-              <MonthlyPlansList selectedPlan={plan.identifier}  planSelected={(plan)=> {
-                console.log("Plan selected ", plan)
-                pricesArray.forEach((item) => {
-                  if(item.identifier === plan){
-                    console.log("Setting plan ", item)
-                    setPlan(item)
-                  }
-                })
-              }}/>
-            ) : (
-              <YearlyPlansList selectedPlan={plan.identifier}  planSelected={(plan)=> {
-                console.log("Plan selected yearly", plan)
-                pricesArray.forEach((item) => {
-                  if(item.identifier === plan){
-                    setPlan(item)
-                  }
-                })
-              }}/>
-            )
-          }
-        </div>
-
+      <div
+        style={{
+          height: "90%",
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        {actMonthly ? (
+          <MonthlyPlansList
+            selectedPlan={plan.identifier}
+            planSelected={(plan) => {
+              console.log("Plan selected ", plan);
+              pricesArray.forEach((item) => {
+                if (item.identifier === plan) {
+                  console.log("Setting plan ", item);
+                  setPlan(item);
+                }
+              });
+            }}
+          />
+        ) : (
+          <YearlyPlansList
+            selectedPlan={plan.identifier}
+            planSelected={(plan) => {
+              console.log("Plan selected yearly", plan);
+              pricesArray.forEach((item) => {
+                if (item.identifier === plan) {
+                  setPlan(item);
+                }
+              });
+            }}
+          />
+        )}
+      </div>
 
       {/* <div className="price-list row">
         {prices.map((price) => {
@@ -265,22 +345,23 @@ const Prices = () => {
             })} 
       </div> */}
 
-      <button style={{marginBottom:20}} className='col-8' onClick={() => createSubscription(plan.id)}>
+      <button
+        style={{ marginBottom: 20 }}
+        className="col-8"
+        onClick={() => createSubscription(plan.id)}
+      >
         Continue
       </button>
 
       {/* </div> */}
-
-
-
     </FormContainer>
   );
-}
+};
 
 const FormContainer = styled.div`
   height: 100vh;
   width: 100%;
-  
+
   display: flex;
   flex-direction: column;
   justify-content: center; // vertical center if column and horizontal if row
@@ -288,7 +369,7 @@ const FormContainer = styled.div`
   align-items: center; //horizontal center
   background-color: transparent;
 
-  .transparent-bg{
+  .transparent-bg {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -296,9 +377,9 @@ const FormContainer = styled.div`
     top: 0;
     left: 0;
     z-index: -1;
-    background-color: #06090F; 
+    background-color: #06090f;
   }
-  .title{
+  .title {
     padding-left: 2rem;
     display: flex;
     // flex-grow: 1;
@@ -308,16 +389,16 @@ const FormContainer = styled.div`
     background-color: transparent;
     justify-content: left;
   }
-  .heading{
-    font-size: 3.0vw;
+  .heading {
+    font-size: 3vw;
     font-weight: bold;
   }
 
   // h1, button{
   //   z-index: 2;
   // }
-  button{
-    background-color: #FFFFFF15;
+  button {
+    background-color: #ffffff15;
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -329,20 +410,19 @@ const FormContainer = styled.div`
     &:hover {
       background-color: #4e0eff;
     }
-    
   }
   @media (max-width: 675px) {
     button {
       font-size: 2.4vh;
       // font-weight: bold;
     }
-    .heading{
+    .heading {
       font-size: 6vw;
       font-weight: bold;
     }
   }
-  
-  .price-list{
+
+  .price-list {
     // z-index: 1;
     display: flex;
     flex-direction: row;
@@ -354,7 +434,7 @@ const FormContainer = styled.div`
     border-radius: 0rem;
 
     margin: 0.5rem;
-    .price-container{
+    .price-container {
       // box-sizing: border-box;
       // z-index: 1;
       flex-grow: 1;
@@ -365,12 +445,11 @@ const FormContainer = styled.div`
       padding: 1rem;
       border-radius: 0.8rem;
       margin-inline-end: 15px;
-      .tickimage{
+      .tickimage {
         display: none;
       }
-      
     }
-    .price-containerselected{
+    .price-containerselected {
       // z-index: 1;
       flex-grow: 1;
 
@@ -379,62 +458,55 @@ const FormContainer = styled.div`
       // border-width: 1rem;
       padding: 1rem;
       border-radius: 0.8rem;
-      .tickimage{
+      .tickimage {
         display: flex;
         width: 3.3rem;
         height: 1.8rem;
         display: flex;
-        
       }
     }
   }
-  .btndiv{
+  .btndiv {
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: end;
   }
-    .bar-container{
-      display:flex;
-      // width:60vw;
-      // height:rem;
-      // background-color:red;
-      flex-direction: row;
-      align-items:center;
-      justify-content:space-between;
-    }
-      .button-container{
-        flex-direction: column;
-        align-items:center;
-        margin-top:5px
-
-      }
-    .button-bar{
-      // width:100px;
-      height:2px;
-      background-color:white;
-      border-raduis:2;
-      margin-top:10px;
-
-    }
-      .button{
-        width:100px;
-        height:30px;
-        background-color: transparent;
-        padding:0px;
-      }
-  
-`
+  .bar-container {
+    display: flex;
+    // width:60vw;
+    // height:rem;
+    // background-color:red;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+  }
+  .button-bar {
+    // width:100px;
+    height: 2px;
+    background-color: white;
+    border-raduis: 2;
+    margin-top: 10px;
+  }
+  .button {
+    width: 100px;
+    height: 30px;
+    background-color: transparent;
+    padding: 0px;
+  }
+`;
 const customStyles = {
-
   overlay: {
-    background: "000000"
+    background: "000000",
   },
   content: {
     background: "#00000090",
     border: "none",
-
   },
-
 };
-export default (Prices);
+export default Prices;
