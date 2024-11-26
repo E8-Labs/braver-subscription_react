@@ -185,6 +185,7 @@ function PromoCode(props) {
       localStorage.getItem(process.env.REACT_APP_LocalSavedUser)
     );
     console.log("User is ", user);
+    // return;
     if (user.accountstatus == "Pending") {
       //call the update api
       const params = {

@@ -79,7 +79,7 @@ const CardsList = (props) => {
       apikey: "kinsal0349",
     });
     if (data.data.status === "1") {
-      //console.log(data.data);
+      console.log(data.data);
       let arr = data.data.data || [];
       arr.push({ id: "addcard", stripecardid: "" });
       setCards(arr);
@@ -112,6 +112,31 @@ const CardsList = (props) => {
         plan: location.state.plan,
       },
     });
+  };
+
+  const getCardImage = (cardType) => {
+    if (!cardType) return "/placeholder.png"; // Fallback image for null or empty values
+
+    const brand = cardType.toLowerCase();
+
+    switch (brand) {
+      case "visa":
+        return "/logo_visa.png";
+      case "mastercard":
+        return "/logo_mastercard.png";
+      case "amex":
+        return "/amex.png";
+      case "discover":
+        return "/discover.png";
+      case "unionpay":
+        return "/unionpay.png";
+      case "jcb":
+        return "/jcb.png";
+      case "diners":
+        return "/diners.png";
+      default:
+        return "/placeholder.png"; // Fallback for unsupported or unknown brands
+    }
   };
 
   const createSubscription = async () => {
@@ -242,11 +267,7 @@ const CardsList = (props) => {
                     ></img>
                     <img
                       className="cardbrand ms-2"
-                      src={
-                        card.cardbrand == "Visa"
-                          ? "/logo_visa.png"
-                          : "logo_mastercard.png"
-                      }
+                      src={getCardImage(card.cardbrand)}
                     ></img>
                     <div className="row ms-1 carddetails">
                       <p className="col-12 text-white fs-6 ">
