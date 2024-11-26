@@ -124,7 +124,7 @@ const CardsList = (props) => {
         return "/logo_visa.png";
       case "mastercard":
         return "/logo_mastercard.png";
-      case "amex":
+      case ("amex", "american express", "americanexpress"):
         return "/amex.png";
       case "discover":
         return "/discover.png";
