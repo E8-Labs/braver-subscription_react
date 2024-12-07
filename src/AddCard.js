@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useMemo } from "react";
+import react, { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -18,6 +18,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 // Import toastify css file
 import "react-toastify/dist/ReactToastify.css";
+import AddCardDetails from "./AddCardDetails";
 // import {Elements} from '@stripe/react-stripe-js';
 // import {loadStripe} from '@stripe/stripe-js';
 
@@ -37,15 +38,15 @@ let envr = process.env.REACT_APP_ENVIRONMENT;
 let promosArray =
   envr === "Production"
     ? [
-        { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
-        { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE },
-        { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
-      ]
+      { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
+      { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE },
+      { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
+    ]
     : [
-        { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
-        { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_DEV },
-        { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
-      ];
+      { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
+      { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_DEV },
+      { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
+    ];
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -124,6 +125,10 @@ function AddCard(props) {
 
   const stripeReact = useStripe();
   const elements = useElements();
+
+  const cardNumberRef = useRef(null);
+  const cardExpiryRef = useRef(null);
+  const cardCvcRef = useRef(null);
   // const elements = stripe.elements({clientSecret, appearance});
   // let card = elements.cre
 
@@ -181,85 +186,131 @@ function AddCard(props) {
     //console.log("Stripe Secret Key " + stripeKey);
     //   this.props.closePopup()
     event.preventDefault();
-    const validation = handleValidation();
-    // navigate("/prices")
-    if (!validation) {
-      //console.log("Validation error")
-    } else {
-      const { cardholdername, cardnumber, cvv, expirydate } = values;
-      // const card = elements.getElement('card');
-      if (!stripe || !elements) {
-        // Stripe.js hasn't yet loaded.
-        //console.log("Stripe not initialized")
+
+    if (!stripeReact || !elements) {
+      console.log("Stripe.js has not loaded yet.");
+      return;
+    }
+
+
+    const cardElement = elements.getElement(CardNumberElement);
+    //     const nm = elements.getElement('cardNumber');
+    //     //console.log("Card number ", nm);
+    //     card.update({value: {cardNumber: cardnumber}});
+    //     card.update({value: {cardExpiry: expirydate}});
+    //     card.update({value: {cardCvc: cvv}});
+    // console.log("User element card is ")
+    console.log("card elements are ",cardElement)
+
+    if (!cardElement) {
+      console.log("CardNumberElement not found.");
+      return;
+    }
+    setAddingCard(true);
+    // return;
+    // stripeReact.createToken(card).then(async function (tok) {
+    //   // Handle result.error or result.token
+    //   console.log("result creating token");
+    //   console.log(tok); //contains a card object as well
+    //   if (tok.token) {
+    //     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
+    //     const user = JSON.parse(d);
+    //     //console.log("User is " + user.userid)
+    //     if (user === null) {
+    //       return;
+    //     } //cus_JgU9iurcpCxLOx
+    //     //console.log("Token obtained " + tok.id)
+    //     const data = await axios.post(
+    //       "https://braverhospitalityapp.com/braver/api/addcard",
+    //       {
+    //         cardnumber: "*****",
+    //         cardholdername: "*****",
+    //         cvc: "*****",
+    //         expirydate: "*****",
+    //         userid: user.userid,
+    //         apikey: "kinsal0349",
+    //         source: tok.token.id,
+    //       }
+    //     );
+    //     setAddingCard(false);
+    //     if (data.data.status === "1") {
+    //       //console.log(data.data); // this will have the whole response from the api with status, message and data
+    //       // navigate("/prices")
+    //       // props.oncardAdded()
+    //       // props.closePopup()
+
+    //       navigate(-1);
+    //     } else {
+    //       //console.log( data.data)
+    //       //console.log("Error " + JSON.stringify(data.data.validation_errors))
+    //       setErrorMessage(data.data.message);
+    //       // toast.error(data.data.message, {
+    //       //   position: "bottom-right",
+    //       //   pauseOnHover: true,
+    //       //   autoClose: 8000,
+    //       //   theme: "dark",
+    //       // });
+    //     }
+    //   } else if (tok.error) {
+    //     setAddingCard(false);
+    //     console.log("Error ");
+    //     //console.log(tok.error)
+    //     setErrorMessage(tok.error.message || "Error adding card");
+    //     // toast.error(tok.error, {
+    //     //   position: "bottom-right",
+    //     //   pauseOnHover: true,
+    //     //   autoClose: 8000,
+    //     //   theme: "light",
+    //     // });
+    //   }
+    // });
+    try {
+      const { token, error } = await stripeReact.createToken(cardElement);
+
+      if (error) {
+        console.log("Error in token creating token:", error);
+        setErrorMessage(error.message || "An error occurred while adding the card.");
+        setAddingCard(false);
         return;
       }
-      const card = elements.getElement(CardElement);
-      //     const nm = elements.getElement('cardNumber');
-      //     //console.log("Card number ", nm);
-      //     card.update({value: {cardNumber: cardnumber}});
-      //     card.update({value: {cardExpiry: expirydate}});
-      //     card.update({value: {cardCvc: cvv}});
-      // console.log("User element card is ")
-      // console.log(card)
-      setAddingCard(true);
-      // return;
-      stripeReact.createToken(card).then(async function (tok) {
-        // Handle result.error or result.token
-        console.log("result creating token");
-        console.log(tok); //contains a card object as well
-        if (tok.token) {
-          const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
-          const user = JSON.parse(d);
-          //console.log("User is " + user.userid)
-          if (user === null) {
-            return;
-          } //cus_JgU9iurcpCxLOx
-          //console.log("Token obtained " + tok.id)
-          const data = await axios.post(
-            "https://braverhospitalityapp.com/braver/api/addcard",
-            {
-              cardnumber: "*****",
-              cardholdername: "*****",
-              cvc: "*****",
-              expirydate: "*****",
-              userid: user.userid,
-              apikey: "kinsal0349",
-              source: tok.token.id,
-            }
-          );
-          setAddingCard(false);
-          if (data.data.status === "1") {
-            //console.log(data.data); // this will have the whole response from the api with status, message and data
-            // navigate("/prices")
-            // props.oncardAdded()
-            // props.closePopup()
 
-            navigate(-1);
-          } else {
-            //console.log( data.data)
-            //console.log("Error " + JSON.stringify(data.data.validation_errors))
-            setErrorMessage(data.data.message);
-            // toast.error(data.data.message, {
-            //   position: "bottom-right",
-            //   pauseOnHover: true,
-            //   autoClose: 8000,
-            //   theme: "dark",
-            // });
-          }
-        } else if (tok.error) {
+      if (token) {
+        console.log("Token created:", token);
+
+        // Retrieve user data from localStorage
+        const user = JSON.parse(localStorage.getItem(process.env.REACT_APP_LocalSavedUser));
+        if (!user || !user.userid) {
+          console.error("User not found in localStorage.");
           setAddingCard(false);
-          console.log("Error ");
-          //console.log(tok.error)
-          setErrorMessage(tok.error.message || "Error adding card");
-          // toast.error(tok.error, {
-          //   position: "bottom-right",
-          //   pauseOnHover: true,
-          //   autoClose: 8000,
-          //   theme: "light",
-          // });
+          return;
         }
-      });
+
+        // Call your API to save the card
+        const response = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
+          cardnumber: "*****", // Masked card data
+          cardholdername: "*****",
+          cvc: "*****",
+          expirydate: "*****",
+          userid: user.userid,
+          apikey: "kinsal0349",
+          source: token.id, // Pass the token ID
+        });
+
+        if (response.data.status === "1") {
+          console.log("Card added successfully:", response.data);
+          navigate(-1); // Navigate back after success
+        } else {
+          console.error("API error:", response.data.message);
+          setErrorMessage(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      setErrorMessage("An unexpected error occurred. Please try again.");
+    } finally {
+      setAddingCard(false); // Hide loading state
     }
+
     // alert("form");
   };
 
@@ -285,6 +336,32 @@ function AddCard(props) {
     //     return false;
     //   }
     return true;
+  };
+
+  const elementOptions = {
+    style: {
+      base: {
+        backgroundColor: 'transparent',
+        color: '#000000',
+        fontSize: '18px',
+        lineHeight: '40px',
+        borderRadius: 10,
+        padding: 10,
+        '::placeholder': {
+          color: '#00000050',
+        },
+      },
+      invalid: {
+        color: 'red',
+      },
+    },
+  };
+
+
+  const handleFieldChange = (event, ref) => {
+    if (event.complete && ref.current) {
+      ref.current.focus();
+    }
   };
 
   return (
@@ -314,7 +391,74 @@ function AddCard(props) {
       </div>
       <form>
         <div className="col-12 ">
-          <CardElement
+
+
+          <div style={{ width: '100%' }}>
+
+            <div style={{ fontSize: 24, fontWeight: "600", color: "white" }}>
+              Add Payment Method
+            </div>
+
+            <div style={{ marginTop: '2rem' }}>
+              <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+                Card Number
+              </div>
+              <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+                <CardNumberElement
+                  options={elementOptions}
+                  autoFocus={true}
+                  onChange={(event) => handleFieldChange(event, cardExpiryRef)}
+                  ref={cardNumberRef}
+                  onReady={(element) => {
+                    cardNumberRef.current = element
+                    cardNumberRef.current.focus()
+                  }}
+                />
+              </div>
+            </div>
+            <div className='flex flex-row gap-2 w-full mt-8'>
+              <div className='w-6/12'>
+                <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+                  Exp
+                </div>
+                <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+                  <CardExpiryElement
+                    options={elementOptions}
+                    style={{
+                      width: '100%', padding: '8px',
+                      color: 'white', fontSize: '22px', border: '1px solid blue', borderRadius: '4px'
+                    }}
+                    onChange={(event) => handleFieldChange(event, cardCvcRef)}
+                    ref={cardExpiryRef}
+                    onReady={(element) => {
+                      cardExpiryRef.current = element
+                    }}
+                  />
+                </div>
+              </div>
+              <div className='w-6/12'>
+                <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+                  CVC
+                </div>
+                <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+                  <CardCvcElement
+                    options={elementOptions}
+                    style={{
+                      width: '100%', padding: '8px',
+                      color: 'white', fontSize: '22px', border: '1px solid blue', borderRadius: '4px'
+                    }}
+                    ref={cardCvcRef}
+                    onReady={(element) => {
+                      cardCvcRef.current = element
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* <CardPostalCodeElement id="postal-code" options={elementOptions} /> */}
+          </div>
+
+          {/* <CardElement
             className="card"
             options={{
               style: {
@@ -323,7 +467,9 @@ function AddCard(props) {
                 },
               },
             }}
-          />
+          /> */}
+
+
         </div>
 
         {/* <input className='inputuser' type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>
@@ -337,15 +483,15 @@ function AddCard(props) {
               <label>Have a promo code?</label>
             </div>
             <input className='inputuser' type='text' placeholder='Promo Code' name='code' onChange={e => handleChangePromo(e)}></input> */}
-        {addingCard ? (
+        {/* {addingCard ? (
           <div>
             <label className="loadingLabel">Adding card</label>
           </div>
-        ) : (
-          <button type="submit" onClick={handleSubmit}>
-            Save Card
-          </button>
-        )}
+        ) : ( */}
+        <button type="submit" onClick={handleSubmit}>
+          Save Card
+        </button>
+        {/* )} */}
         <Snackbar
           open={errorMessage != null}
           autoHideDuration={6000}
