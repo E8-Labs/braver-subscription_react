@@ -38,15 +38,15 @@ let envr = process.env.REACT_APP_ENVIRONMENT;
 let promosArray =
   envr === "Production"
     ? [
-      { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
-      { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE },
-      { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
-    ]
+        { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
+        { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_LIVE },
+        { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_LIVE },
+      ]
     : [
-      { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
-      { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_DEV },
-      { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
-    ];
+        { code: "Braver23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
+        { code: "BraverLife", id: process.env.REACT_APP_PROMO_BRAVERLIFE_DEV },
+        { code: "BraverYr23", id: process.env.REACT_APP_PROMO_BRAVER23_DEV },
+      ];
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -192,7 +192,6 @@ function AddCard(props) {
       return;
     }
 
-
     const cardElement = elements.getElement(CardNumberElement);
     //     const nm = elements.getElement('cardNumber');
     //     //console.log("Card number ", nm);
@@ -200,7 +199,7 @@ function AddCard(props) {
     //     card.update({value: {cardExpiry: expirydate}});
     //     card.update({value: {cardCvc: cvv}});
     // console.log("User element card is ")
-    console.log("card elements are ",cardElement)
+    console.log("card elements are ", cardElement);
 
     if (!cardElement) {
       console.log("CardNumberElement not found.");
@@ -269,16 +268,20 @@ function AddCard(props) {
 
       if (error) {
         console.log("Error in token creating token:", error);
-        setErrorMessage(error.message || "An error occurred while adding the card.");
+        setErrorMessage(
+          error.message || "An error occurred while adding the card."
+        );
         setAddingCard(false);
         return;
       }
 
       if (token) {
         console.log("Token created:", token);
-
+        // return;
         // Retrieve user data from localStorage
-        const user = JSON.parse(localStorage.getItem(process.env.REACT_APP_LocalSavedUser));
+        const user = JSON.parse(
+          localStorage.getItem(process.env.REACT_APP_LocalSavedUser)
+        );
         if (!user || !user.userid) {
           console.error("User not found in localStorage.");
           setAddingCard(false);
@@ -286,15 +289,18 @@ function AddCard(props) {
         }
 
         // Call your API to save the card
-        const response = await axios.post("https://braverhospitalityapp.com/braver/api/addcard", {
-          cardnumber: "*****", // Masked card data
-          cardholdername: "*****",
-          cvc: "*****",
-          expirydate: "*****",
-          userid: user.userid,
-          apikey: "kinsal0349",
-          source: token.id, // Pass the token ID
-        });
+        const response = await axios.post(
+          "https://braverhospitalityapp.com/braver/api/addcard",
+          {
+            cardnumber: "*****", // Masked card data
+            cardholdername: "*****",
+            cvc: "*****",
+            expirydate: "*****",
+            userid: user.userid,
+            apikey: "kinsal0349",
+            source: token.id, // Pass the token ID
+          }
+        );
 
         if (response.data.status === "1") {
           console.log("Card added successfully:", response.data);
@@ -341,22 +347,21 @@ function AddCard(props) {
   const elementOptions = {
     style: {
       base: {
-        backgroundColor: 'transparent',
-        color: '#000000',
-        fontSize: '18px',
-        lineHeight: '40px',
+        backgroundColor: "transparent",
+        color: "#000000",
+        fontSize: "18px",
+        lineHeight: "40px",
         borderRadius: 10,
         padding: 10,
-        '::placeholder': {
-          color: '#00000050',
+        "::placeholder": {
+          color: "#00000050",
         },
       },
       invalid: {
-        color: 'red',
+        color: "red",
       },
     },
   };
-
 
   const handleFieldChange = (event, ref) => {
     if (event.complete && ref.current) {
@@ -391,65 +396,100 @@ function AddCard(props) {
       </div>
       <form>
         <div className="col-12 ">
-
-
-          <div style={{ width: '100%' }}>
-
+          <div style={{ width: "100%" }}>
             <div style={{ fontSize: 24, fontWeight: "600", color: "white" }}>
               Add Payment Method
             </div>
 
-            <div style={{ marginTop: '2rem' }}>
-              <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+            <div style={{ marginTop: "2rem" }}>
+              <div
+                style={{
+                  fontWeight: "400",
+                  fontSize: 13,
+                  color: "#fff",
+                  marginTop: "2rem",
+                }}
+              >
                 Card Number
               </div>
-              <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+              <div
+                className="mt-2 px-3 py-1"
+                style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}
+              >
                 <CardNumberElement
                   options={elementOptions}
                   autoFocus={true}
                   onChange={(event) => handleFieldChange(event, cardExpiryRef)}
                   ref={cardNumberRef}
                   onReady={(element) => {
-                    cardNumberRef.current = element
-                    cardNumberRef.current.focus()
+                    cardNumberRef.current = element;
+                    cardNumberRef.current.focus();
                   }}
                 />
               </div>
             </div>
-            <div className='flex flex-row gap-2 w-full mt-8'>
-              <div className='w-6/12'>
-                <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+            <div className="flex flex-row gap-2 w-full mt-8">
+              <div className="w-6/12">
+                <div
+                  style={{
+                    fontWeight: "400",
+                    fontSize: 13,
+                    color: "#fff",
+                    marginTop: "2rem",
+                  }}
+                >
                   Exp
                 </div>
-                <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+                <div
+                  className="mt-2 px-3 py-1"
+                  style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}
+                >
                   <CardExpiryElement
                     options={elementOptions}
                     style={{
-                      width: '100%', padding: '8px',
-                      color: 'white', fontSize: '22px', border: '1px solid blue', borderRadius: '4px'
+                      width: "100%",
+                      padding: "8px",
+                      color: "white",
+                      fontSize: "22px",
+                      border: "1px solid blue",
+                      borderRadius: "4px",
                     }}
                     onChange={(event) => handleFieldChange(event, cardCvcRef)}
                     ref={cardExpiryRef}
                     onReady={(element) => {
-                      cardExpiryRef.current = element
+                      cardExpiryRef.current = element;
                     }}
                   />
                 </div>
               </div>
-              <div className='w-6/12'>
-                <div style={{ fontWeight: "400", fontSize: 13, color: "#fff", marginTop: '2rem' }}>
+              <div className="w-6/12">
+                <div
+                  style={{
+                    fontWeight: "400",
+                    fontSize: 13,
+                    color: "#fff",
+                    marginTop: "2rem",
+                  }}
+                >
                   CVC
                 </div>
-                <div className='mt-2 px-3 py-1' style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}>
+                <div
+                  className="mt-2 px-3 py-1"
+                  style={{ backgroundColor: "#EDEDEDC7", borderRadius: "8px" }}
+                >
                   <CardCvcElement
                     options={elementOptions}
                     style={{
-                      width: '100%', padding: '8px',
-                      color: 'white', fontSize: '22px', border: '1px solid blue', borderRadius: '4px'
+                      width: "100%",
+                      padding: "8px",
+                      color: "white",
+                      fontSize: "22px",
+                      border: "1px solid blue",
+                      borderRadius: "4px",
                     }}
                     ref={cardCvcRef}
                     onReady={(element) => {
-                      cardCvcRef.current = element
+                      cardCvcRef.current = element;
                     }}
                   />
                 </div>
@@ -468,8 +508,6 @@ function AddCard(props) {
               },
             }}
           /> */}
-
-
         </div>
 
         {/* <input className='inputuser' type='text' placeholder='Card Holder Name' name='cardholdername' onChange={e => handleChange(e)}></input>

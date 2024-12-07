@@ -171,7 +171,7 @@ function PromoCode(props) {
     setAmount(discountAmount);
   };
 
-  const createSubscription = async () => {
+  const createSubscription = async (skip) => {
     // if (!actBtn) {
     //   console.log("Not act btn");
     //   return;
@@ -217,7 +217,7 @@ function PromoCode(props) {
       }
     } else {
       console.log("Promo code ", code);
-      if ((code == null && code == "") || !codeValid) {
+      if (!skip && ((code == null && code == "") || !codeValid)) {
         //if(codeid === null && (code !== null && code !== "")){
         // if (!codeid && code !== "") {
         toast("Invalid Promo Code", {
@@ -268,8 +268,11 @@ function PromoCode(props) {
   };
 
   return (
-    <FormContainer>
-      <div className="row headingrow p-2">
+    <FormContainer style={{ height: "100svh" }}>
+      <div
+        className="row headingrow p-2 flex justify-start items-start"
+        style={{ backgroundColor: "" }}
+      >
         <div className="col-2 btn" onClick={() => navigate(-1)}>
           <img className="backbtn" src="/backarrow.png" alt="Back" />
         </div>
@@ -280,7 +283,9 @@ function PromoCode(props) {
           <button
             className="continuebtn"
             type="submit"
-            onClick={createSubscription}
+            onClick={() => {
+              createSubscription(true);
+            }}
           >
             SKIP
           </button>
@@ -310,7 +315,12 @@ function PromoCode(props) {
         </div>
       </form>
       {!loading ? (
-        <button className="continuebtn" onClick={createSubscription}>
+        <button
+          className="continuebtn"
+          onClick={() => {
+            createSubscription(true);
+          }}
+        >
           Continue
         </button>
       ) : (

@@ -47,7 +47,7 @@ const CardsList = (props) => {
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [promo, setPromo] = useState(null);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   // const [prices, setPrices] = useState([{id: "price_1Ne3NLC2y2Wr4BecZqIUeYwc", name: "Monthly Plan", unit_amount: "$99.99/mo", trial: "90 day free trial"},
   // {id: "price_1Ne3NLC2y2Wr4BecgGF4TPG6", name: "6 Month Plan", unit_amount: "$999.99/6mo", trial: "90 day free trial"}]);
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -70,7 +70,7 @@ const CardsList = (props) => {
 
   const loadCards = async () => {
     //console.log("User key " + process.env.REACT_APP_LocalSavedUser)
-    setLoading(true)
+    setLoading(true);
     const d = localStorage.getItem(process.env.REACT_APP_LocalSavedUser);
     const user = JSON.parse(d);
     //console.log("User is " + user.userid)
@@ -81,7 +81,7 @@ const CardsList = (props) => {
       apikey: "kinsal0349",
     });
     if (data.data.status === "1") {
-      setLoading(false)
+      setLoading(false);
       console.log(data.data);
       let arr = data.data.data || [];
       arr.push({ id: "addcard", stripecardid: "" });
@@ -218,7 +218,7 @@ const CardsList = (props) => {
   }
 
   return (
-    <FormContainer className="">
+    <FormContainer className="" style={{ height: "100svh" }}>
       {/* heading row */}
       <div className="row headingrow  p-2">
         <div

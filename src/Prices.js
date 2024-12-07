@@ -27,81 +27,81 @@ let stripeKey =
 let pricesArray =
   process.env.REACT_APP_ENVIRONMENT === "Production"
     ? [
-      {
-        id: "price_1PqqchC2y2Wr4BecnrBic37s",
-        name: "Monthly Plan",
-        unit_amount: "$1k",
-        price: 1000,
-        trial: "7 day free trial",
-        type: "Monthly",
-        identifier: "monthly_private",
-      },
-      {
-        id: "price_1PqqerC2y2Wr4BecRTvEsD1u",
-        name: "Monthly Plan",
-        unit_amount: "$4k",
-        price: 4000,
-        trial: "7 day free trial",
-        type: "Monthly",
-        identifier: "monthly_executive",
-      },
-      {
-        id: "price_1PqqiXC2y2Wr4BecgL2a3LmO",
-        name: "Yearly Plan",
-        unit_amount: "$12k",
-        price: 12000,
-        trial: "7 day free trial",
-        type: "Yearly",
-        identifier: "yearly_private",
-      },
-      {
-        id: "price_1Pqqj4C2y2Wr4BecXvK55VpD",
-        name: "Yearly Plan",
-        unit_amount: "$48k",
-        price: 48000,
-        trial: "7 day free trial",
-        type: "Yearly",
-        identifier: "yearly_executive",
-      },
-    ]
+        {
+          id: "price_1PqqchC2y2Wr4BecnrBic37s",
+          name: "Monthly Plan",
+          unit_amount: "$1k",
+          price: 1000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_private",
+        },
+        {
+          id: "price_1PqqerC2y2Wr4BecRTvEsD1u",
+          name: "Monthly Plan",
+          unit_amount: "$4k",
+          price: 4000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_executive",
+        },
+        {
+          id: "price_1PqqiXC2y2Wr4BecgL2a3LmO",
+          name: "Yearly Plan",
+          unit_amount: "$12k",
+          price: 12000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_private",
+        },
+        {
+          id: "price_1Pqqj4C2y2Wr4BecXvK55VpD",
+          name: "Yearly Plan",
+          unit_amount: "$48k",
+          price: 48000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_executive",
+        },
+      ]
     : [
-      {
-        id: "price_1Pr19tC2y2Wr4BecpgzE7q1l",
-        name: "Monthly Plan",
-        unit_amount: "$1k",
-        price: 1000,
-        trial: "7 day free trial",
-        type: "Monthly",
-        identifier: "monthly_private",
-      },
-      {
-        id: "price_1Pr1AJC2y2Wr4BecS1YqbFuD",
-        name: "Monthly Plan",
-        unit_amount: "$4k",
-        price: 4000,
-        trial: "7 day free trial",
-        type: "Monthly",
-        identifier: "monthly_executive",
-      },
-      {
-        id: "price_1Pr1AnC2y2Wr4BecpeNsyp7P",
-        name: "Yearly Plan",
-        unit_amount: "$12k",
-        price: 12000,
-        trial: "7 day free trial",
-        type: "Yearly",
-        identifier: "yearly_private",
-      },
-      {
-        id: "price_1Pr1BpC2y2Wr4BeceuB4fiuz",
-        name: "Yearly Plan",
-        unit_amount: "$48k",
-        price: 48000,
-        trial: "7 day free trial",
-        type: "Yearly",
-        identifier: "yearly_executive",
-      },
-    ];
+        {
+          id: "price_1Pr19tC2y2Wr4BecpgzE7q1l",
+          name: "Monthly Plan",
+          unit_amount: "$1k",
+          price: 1000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_private",
+        },
+        {
+          id: "price_1Pr1AJC2y2Wr4BecS1YqbFuD",
+          name: "Monthly Plan",
+          unit_amount: "$4k",
+          price: 4000,
+          trial: "7 day free trial",
+          type: "Monthly",
+          identifier: "monthly_executive",
+        },
+        {
+          id: "price_1Pr1AnC2y2Wr4BecpeNsyp7P",
+          name: "Yearly Plan",
+          unit_amount: "$12k",
+          price: 12000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_private",
+        },
+        {
+          id: "price_1Pr1BpC2y2Wr4BeceuB4fiuz",
+          name: "Yearly Plan",
+          unit_amount: "$48k",
+          price: 48000,
+          trial: "7 day free trial",
+          type: "Yearly",
+          identifier: "yearly_executive",
+        },
+      ];
 
 const Prices = () => {
   const stripe = Stripe(stripeKey);
@@ -119,9 +119,9 @@ const Prices = () => {
   //toggle monthly and yearly buttons
   const [actMonthly, setActMonthly] = useState(true);
   const [actYearly, setActYearly] = useState(false);
-  const [isPlanSelected, setIsPlanSelected] = useState(false)
+  const [isPlanSelected, setIsPlanSelected] = useState(false);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const loadCards = async () => {
     //console.log("User key " + process.env.REACT_APP_LocalSavedUser)
@@ -236,14 +236,17 @@ const Prices = () => {
   };
 
   return (
-    <FormContainer className="bg-image" style={{ justifyContent: "flex-start" }}>
-      <div className="transparent-bg"></div>
+    <FormContainer
+      className="bg-image"
+      style={{ justifyContent: "flex-start", height: "100svh" }}
+    >
+      <div className="transparent-bg" style={{ backgroundColor: "" }}></div>
       {/* <div className=''> */}
       <img
         className="logo"
         src="/bravernew.png"
         alt="Braver"
-        background="red"
+        // background="red"
         height={50}
       ></img>
       <div className="bar-container">
@@ -286,12 +289,12 @@ const Prices = () => {
 
       <div
         style={{
-          height: "55%",
+          // height: "55%",
           width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: "0rem",
-          // backgroundColor:'red'
+          alignItems: "start",
+          justifyContent: "start",
+          // marginTop: "0rem",
+          // backgroundColor: "red",
         }}
       >
         {actMonthly ? (
@@ -346,18 +349,15 @@ const Prices = () => {
               )
             })} 
       </div> */}
-      {
-        Object.keys(plan).length>0 && (
-          <button
-            style={{ marginBottom: 20 }}
-            className="col-8"
-            onClick={() => createSubscription(plan.id)}
-          >
-            Continue
-          </button>
-        )
-      }
-
+      {Object.keys(plan).length > 0 && (
+        <button
+          style={{ marginBottom: 20 }}
+          className="col-8"
+          onClick={() => createSubscription(plan.id)}
+        >
+          Continue
+        </button>
+      )}
 
       {/* </div> */}
     </FormContainer>
