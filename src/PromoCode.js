@@ -315,14 +315,18 @@ function PromoCode(props) {
         </div>
       </form>
       {!loading ? (
-        <button
-          className="continuebtn"
-          onClick={() => {
-            createSubscription(true);
-          }}
-        >
-          Continue
-        </button>
+        code && codeValid ? (
+          <button
+            className="continuebtn"
+            onClick={() => {
+              createSubscription(true);
+            }}
+          >
+            Continue
+          </button>
+        ) : (
+          <></>
+        )
       ) : (
         <div
           style={{
