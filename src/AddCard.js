@@ -11,7 +11,7 @@ import {
   CardCvcElement,
   CardExpiryElement,
 } from "@stripe/react-stripe-js";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, CircularProgress } from "@mui/material";
 import Stripe from "stripe";
 import axios from "axios";
 
@@ -526,12 +526,12 @@ function AddCard(props) {
             <label className="loadingLabel">Adding card</label>
           </div>
         ) : ( */}
-        {addingCard ? (
+        {!addingCard ? (
           <button type="submit" onClick={handleSubmit}>
             Save Card
           </button>
         ) : (
-          <button type="submit">Saving Card...</button>
+          <CircularProgress style={{ alignSelf: "center" }} />
         )}
         {/* )} */}
         <Snackbar
