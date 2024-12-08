@@ -301,7 +301,7 @@ function AddCard(props) {
             source: token.id, // Pass the token ID
           }
         );
-
+        setAddingCard(false);
         if (response.data.status === "1") {
           console.log("Card added successfully:", response.data);
           navigate(-1); // Navigate back after success
@@ -526,9 +526,13 @@ function AddCard(props) {
             <label className="loadingLabel">Adding card</label>
           </div>
         ) : ( */}
-        <button type="submit" onClick={handleSubmit}>
-          Save Card
-        </button>
+        {addingCard ? (
+          <button type="submit" onClick={handleSubmit}>
+            Save Card
+          </button>
+        ) : (
+          <button type="submit">Saving Card...</button>
+        )}
         {/* )} */}
         <Snackbar
           open={errorMessage != null}
